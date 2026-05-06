@@ -15,7 +15,7 @@ from tokenbank.models.execution_attempt import ExecutionAttempt
 from tokenbank.models.host_summary import HostResultSummary
 from tokenbank.models.policy_decision import PolicyDecision
 from tokenbank.models.result_envelope import WorkUnitResultEnvelope
-from tokenbank.models.route_decision import RouteDecisionTrace
+from tokenbank.models.route_decision import RouteDecisionTrace, RouteScoringReport
 from tokenbank.models.route_plan import RouteCandidate, RoutePlan
 from tokenbank.models.task_analysis import TaskAnalysisReport
 from tokenbank.models.task_profile import TaskProfile
@@ -37,6 +37,7 @@ __all__ = [
     "HostResultSummary",
     "PolicyDecision",
     "RouteDecisionTrace",
+    "RouteScoringReport",
     "RouteCandidate",
     "RoutePlan",
     "TaskAnalysisReport",

@@ -33,11 +33,13 @@ from tokenbank.host_adapter.normalizer import (
     reject_forbidden_host_input,
 )
 from tokenbank.host_adapter.summaries import host_result_response, routebook_excerpt
+from tokenbank.models.route_decision import RouteScoringReport
 from tokenbank.models.route_plan import RouteCandidate, RoutePlan
 from tokenbank.models.work_unit import WorkUnit
 from tokenbank.observability.report_generator import generate_cost_quality_report
 from tokenbank.routebook.loader import load_routebook_dir
 from tokenbank.router.route_explainer import RouteExplainer
+from tokenbank.router.route_scorer import apply_scored_selection
 from tokenbank.router.service import RouterService
 from tokenbank.router.task_analyzer import TaskAnalyzer
 
@@ -97,6 +99,7 @@ class HostAdapterCore:
         *,
         task_type: str | None,
         input_payload: dict[str, Any] | list[Any] | None = None,
+        routebook_v1_dir: str | Path = "packs/base-routing/routebook",
     ) -> dict[str, Any]:
         """Return a deterministic RoutePlan estimate without scheduling work."""
         request = normalize_submit_request(
@@ -104,10 +107,31 @@ class HostAdapterCore:
             payload=input_payload,
         )
         loaded_config = load_config_dir(self.config_dir)
+        work_unit = self._estimate_work_unit(request)
         route_plan = RouterService.from_dirs(
             config_dir=loaded_config.root,
             routebook_dir=self._routebook_root(loaded_config),
-        ).plan_route(self._estimate_work_unit(request).model_dump(mode="json"))
+        ).plan_route(work_unit.model_dump(mode="json"))
+        task_analysis_report = TaskAnalyzer.from_dirs(
+            config_dir=loaded_config.root,
+            routebook_v1_dir=routebook_v1_dir,
+        ).analyze(work_unit=work_unit, route_plan=route_plan)
+        explanation = RouteExplainer.from_dirs(
+            config_dir=loaded_config.root,
+            routebook_dir=self._routebook_root(loaded_config),
+            routebook_v1_dir=routebook_v1_dir,
+        ).explain(
+            work_unit=work_unit,
+            route_plan=route_plan,
+            task_analysis_report=task_analysis_report,
+        )
+        if "route_scoring_report" in explanation:
+            route_plan = apply_scored_selection(
+                route_plan=route_plan,
+                scoring_report=RouteScoringReport.model_validate(
+                    explanation["route_scoring_report"]
+                ),
+            )
         selected_candidate = _selected_candidate(route_plan)
         backend = BackendRegistry.from_config(loaded_config).get(
             selected_candidate.backend_id
@@ -121,6 +145,12 @@ class HostAdapterCore:
             "task_type": request.task_type,
             "route_plan": route_plan.model_dump(mode="json"),
             "selected_candidate": selected_candidate.model_dump(mode="json"),
+            "route_scoring_report": explanation.get("route_scoring_report"),
+            "route_scoring_hash": explanation.get("route_scoring_hash"),
+            "task_analysis_report": task_analysis_report.model_dump(mode="json"),
+            "task_analysis_hash": canonical_json_hash(
+                task_analysis_report.model_dump(mode="json")
+            ),
             "estimated_cost_micros": estimated_cost_micros,
             "cost_source": backend.cost_model.cost_source,
             "verifier_recipe_id": route_plan.verifier_recipe_id,
@@ -157,11 +187,43 @@ class HostAdapterCore:
             route_plan=route_plan,
             task_analysis_report=task_analysis_report,
         )
+        if "route_scoring_report" in explanation:
+            route_plan = apply_scored_selection(
+                route_plan=route_plan,
+                scoring_report=RouteScoringReport.model_validate(
+                    explanation["route_scoring_report"]
+                ),
+            )
         return {
             "status": "ok",
             "task_type": request.task_type,
             "route_plan": route_plan.model_dump(mode="json"),
             **explanation,
+        }
+
+    def score_route(
+        self,
+        *,
+        task_type: str | None,
+        input_payload: dict[str, Any] | list[Any] | None = None,
+        routebook_v1_dir: str | Path = "packs/base-routing/routebook",
+    ) -> dict[str, Any]:
+        """Return a WP-RB3 RouteScoringReport without scheduling work."""
+        explanation = self.explain_route(
+            task_type=task_type,
+            input_payload=input_payload,
+            routebook_v1_dir=routebook_v1_dir,
+        )
+        return {
+            "status": "ok",
+            "task_type": explanation["task_type"],
+            "route_plan": explanation["route_plan"],
+            "task_profile": explanation["task_profile"],
+            "capacity_profiles": explanation["capacity_profiles"],
+            "task_analysis_report": explanation["task_analysis_report"],
+            "task_analysis_hash": explanation["task_analysis_hash"],
+            "route_scoring_report": explanation["route_scoring_report"],
+            "route_scoring_hash": explanation["route_scoring_hash"],
         }
 
     def analyze_route(

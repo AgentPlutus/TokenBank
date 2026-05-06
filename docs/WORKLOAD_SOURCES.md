@@ -9,7 +9,7 @@ and do not read arbitrary workspace contents.
 ## Current Sources
 
 - HostAdapter CLI: submits explicit JSON, URL, or inline text inputs.
-- MCP stdio stub: exposes eight bounded tools that submit Work Units or read
+- MCP stdio stub: exposes nine bounded tools that submit Work Units or read
   host-safe summaries.
 - Private Capacity Demo: fixture-backed dataset for the five P0 task types.
 

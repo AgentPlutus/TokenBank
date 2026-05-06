@@ -11,7 +11,7 @@ uv run tokenbank mcp serve
 
 ## Tool Surface
 
-The MCP server exposes exactly eight bounded tools:
+The MCP server exposes exactly nine bounded tools:
 
 - `tokenbank_list_capabilities`
 - `tokenbank_estimate`
@@ -21,20 +21,25 @@ The MCP server exposes exactly eight bounded tools:
 - `tokenbank_get_routebook_excerpt`
 - `tokenbank_get_route_explanation`
 - `tokenbank_get_task_analysis`
+- `tokenbank_get_route_score`
 
 `tokenbank_submit` creates schema-bound Work Units through HostAdapterCore. It
 does not execute Work Units directly and does not bypass Router, Policy,
 Scheduler, Worker, BackendAdapter, or Verifier.
 
-`tokenbank_get_route_explanation` is the WP-RB1 Routebook V1 read-only
-explanation tool. It returns a TaskProfile, CapacityProfile summaries, a
-RouteDecisionTrace, TaskAnalysisReport, and the existing RoutePlan without
+`tokenbank_get_route_explanation` is the Routebook V1 explanation tool. It
+returns a TaskProfile, CapacityProfile summaries, TaskAnalysisReport,
+RouteScoringReport, RouteDecisionTrace, and a scored RoutePlan without
 scheduling or executing work.
 
 `tokenbank_get_task_analysis` is the WP-RB2 deterministic preflight tool. It
 returns InputShape, TokenEstimate, CostEstimate, PrivacyScan,
 ComplexityEstimate, effective risk/privacy levels, and a stable analysis hash
 without calling a model.
+
+`tokenbank_get_route_score` is the WP-RB3 deterministic scoring tool. It returns
+hard filter decisions, weighted score components, candidate ranks, rejected
+candidate reasons, and a stable route scoring hash without calling a model.
 
 ## Resource Boundary
 

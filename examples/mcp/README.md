@@ -1,6 +1,6 @@
 # TokenBank MCP P0 Stub
 
-TokenBank exposes the Private Agent Capacity Network as eight schema-bound MCP
+TokenBank exposes the Private Agent Capacity Network as nine schema-bound MCP
 tools:
 
 - `tokenbank_list_capabilities`
@@ -11,6 +11,7 @@ tools:
 - `tokenbank_get_routebook_excerpt`
 - `tokenbank_get_route_explanation`
 - `tokenbank_get_task_analysis`
+- `tokenbank_get_route_score`
 
 The server is a Phase 0 stdio stub:
 

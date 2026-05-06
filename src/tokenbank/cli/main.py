@@ -510,6 +510,32 @@ def route_analyze(
     _emit_payload(result, json_output=json_output)
 
 
+@route_app.command("score")
+def route_score(
+    task_type: str = typer.Option(..., "--task-type", help="Supported task type."),
+    input_path: Path = WORKUNIT_INPUT_OPTION,
+    json_output: bool = typer.Option(
+        False,
+        "--json",
+        help="Emit machine-readable JSON.",
+    ),
+    config_dir: Path = CONFIG_DIR_OPTION,
+    db_path: Path = DB_PATH_OPTION,
+    routebook_v1_dir: Path = ROUTEBOOK_V1_DIR_OPTION,
+) -> None:
+    """Score RoutePlan candidates without scheduling work or calling a model."""
+    try:
+        payload = json.loads(input_path.read_text(encoding="utf-8"))
+        result = _host_adapter(config_dir, db_path).score_route(
+            task_type=task_type,
+            input_payload=payload,
+            routebook_v1_dir=routebook_v1_dir,
+        )
+    except (HostAdapterInputError, json.JSONDecodeError, FileNotFoundError) as exc:
+        raise typer.BadParameter(str(exc)) from exc
+    _emit_payload(result, json_output=json_output)
+
+
 @capacity_app.command("list")
 def capacity_list(
     config_dir: Path = CONFIG_DIR_OPTION,

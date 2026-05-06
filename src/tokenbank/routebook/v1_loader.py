@@ -12,6 +12,7 @@ from tokenbank.routebook.loader import load_yaml_file
 REQUIRED_ROUTEBOOK_V1_FILES = (
     "routebook.yaml",
     "ontology.yaml",
+    "scoring.yaml",
 )
 
 
@@ -39,6 +40,10 @@ class LoadedRoutebookV1:
     def task_families(self) -> dict[str, Any]:
         return dict(self.ontology.get("task_families", {}))
 
+    @property
+    def scoring(self) -> dict[str, Any]:
+        return dict(self.documents["scoring"])
+
 
 def load_routebook_v1_dir(
     routebook_v1_dir: str | Path = "packs/base-routing/routebook",
@@ -59,6 +64,7 @@ def load_routebook_v1_dir(
     ontology = documents["ontology"]
     _validate_manifest(manifest)
     _validate_ontology(ontology)
+    _validate_scoring(documents["scoring"])
     return LoadedRoutebookV1(
         root=root,
         manifest=manifest,
@@ -80,3 +86,21 @@ def _validate_ontology(ontology: dict[str, Any]) -> None:
         value = ontology.get(key)
         if not isinstance(value, dict) or not value:
             raise ValueError(f"Routebook V1 ontology requires non-empty {key}")
+
+
+def _validate_scoring(scoring: dict[str, Any]) -> None:
+    for key in ("scorer_id", "version", "selection_policy"):
+        value = scoring.get(key)
+        if not isinstance(value, str) or not value:
+            raise ValueError(f"Routebook V1 scoring requires non-empty {key}")
+    weights = scoring.get("score_weights")
+    if not isinstance(weights, dict) or not weights:
+        raise ValueError("Routebook V1 scoring requires non-empty score_weights")
+    for component, weight in weights.items():
+        if not isinstance(component, str) or not component:
+            raise ValueError("Routebook V1 scoring component names must be strings")
+        if not isinstance(weight, int | float) or weight < 0:
+            raise ValueError("Routebook V1 scoring weights must be non-negative")
+    hard_filters = scoring.get("hard_filters")
+    if not isinstance(hard_filters, list) or not hard_filters:
+        raise ValueError("Routebook V1 scoring requires hard_filters")

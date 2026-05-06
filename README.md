@@ -31,9 +31,11 @@ CapacityProfile, and RouteDecisionTrace contracts plus read-only route
 explanation through CLI/MCP without changing Phase 0 route selection. WP-RB2
 adds deterministic TaskAnalysisReport generation, token/cost estimates,
 privacy preflight, `route analyze`, and MCP task analysis without scheduling or
-model calls. It does not implement dashboard UI, full model gateway runtime,
-real external model calls, multi-provider gateway, scored routing, account
-ledger, or peer negotiation.
+model calls. WP-RB3 adds deterministic RouteScorer hard filters, weighted
+candidate scoring, `route score`, MCP route scoring, and scored RoutePlan
+selection without scheduling or model calls. It does not implement dashboard UI,
+full model gateway runtime, real external model calls, multi-provider gateway,
+account ledger, or peer negotiation.
 
 ## Current Scope
 
@@ -107,6 +109,9 @@ The current foundation provides:
   PrivacyScan, ComplexityEstimate, TaskAnalysisReport schema, CLI route
   analysis, MCP task analysis, and route explanations that carry analysis hash
   and estimate summary.
+- WP-RB3 deterministic RouteScorer, scoring weights, hard filter decisions,
+  weighted score components, RouteScoringReport schema, CLI route scoring, MCP
+  route scoring, and RoutePlan selection by highest-scoring passing candidate.
 - Smoke tests for importability, CLI help, terminology, schema parity,
   validation, canonical hashing, database bootstrap, event outbox, capacity
   registry, policy, config validation, API auth/startup, scheduler assignment
@@ -117,8 +122,8 @@ The current foundation provides:
   endpoint drift, plus the VS0 `url_check`, VS1a `dedup`, VS1b
   `webpage_extraction`, VS1c `topic_classification`, VS1d
   `claim_extraction` end-to-end paths, WP11 report generation/redaction, WP12
-  MCP tools, WP13 private capacity demo, WP-RB1 route explanation, and WP-RB2
-  task analysis.
+  MCP tools, WP13 private capacity demo, WP-RB1 route explanation, WP-RB2
+  task analysis, and WP-RB3 route scoring.
 
 ## Quickstart
 
@@ -134,6 +139,7 @@ uv run tokenbank host webpage-extract https://example.com/page --html '<html><ti
 uv run tokenbank host topic-classify 'The API worker stores software cost evidence.' --allowed-labels-json '["engineering","science","finance","policy","general"]'
 uv run tokenbank host claim-extract 'TokenBank routes private capacity through a control-plane gateway.' --source-id src_claim_1 --entity TokenBank
 uv run tokenbank route analyze --task-type url_check --input tests/fixtures/route_requests/url_check.json --json
+uv run tokenbank route score --task-type claim_extraction --input tests/fixtures/route_requests/claim_extraction.json --json
 uv run tokenbank route explain --task-type url_check --input tests/fixtures/route_requests/url_check.json --json
 uv run tokenbank report summary --run-id <run_id> --json
 uv run tokenbank report capacity --run-id <run_id> --json
@@ -177,12 +183,13 @@ WP12 HostAdapter CLI + bounded MCP stdio stub
 WP13 Private Capacity Demo
 WP-RB1 Routebook V1 Profiles And Explanation
 WP-RB2 TaskAnalyzer And TokenEstimate
-then WP-RB3 or later only with an explicit work package
+WP-RB3 RouteScorer
+then WP-RB4 or later only with an explicit work package
 ```
 
 Do not proceed to all five task types until VS0 passes.
-After WP-RB2, do not broaden into scored routing, account ledger, dashboard,
-x-radar, real external model calls, peer negotiation, or multi-provider gateway
+After WP-RB3, do not broaden into account ledger, dashboard, x-radar,
+real external model calls, peer negotiation, or multi-provider gateway
 without an explicit work package.
 
 ## Contributing And Security

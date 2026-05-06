@@ -17,6 +17,7 @@ MCP_TOOL_NAMES = (
     "tokenbank_get_routebook_excerpt",
     "tokenbank_get_route_explanation",
     "tokenbank_get_task_analysis",
+    "tokenbank_get_route_score",
 )
 
 
@@ -96,6 +97,12 @@ class MCPStdioServer:
                 input_schema=_task_input_schema(),
                 output_schema={"type": "object"},
             ),
+            _tool(
+                "tokenbank_get_route_score",
+                "Return WP-RB3 RouteScoringReport without scheduling.",
+                input_schema=_task_input_schema(),
+                output_schema={"type": "object"},
+            ),
         ]
 
     def call_tool(self, name: str, arguments: dict[str, Any] | None = None) -> dict:
@@ -129,6 +136,11 @@ class MCPStdioServer:
             )
         if name == "tokenbank_get_task_analysis":
             return self.core.analyze_route(
+                task_type=_optional_task_type(args),
+                input_payload=_input_payload(args),
+            )
+        if name == "tokenbank_get_route_score":
+            return self.core.score_route(
                 task_type=_optional_task_type(args),
                 input_payload=_input_payload(args),
             )

@@ -205,9 +205,10 @@ def test_mcp_tool_cap_and_no_proxy_red_gate(tmp_path: Path) -> None:
     tools = server.tool_definitions()
     tool_names = [tool["name"] for tool in tools]
 
-    assert len(tools) == 8
+    assert len(tools) == 9
     assert "tokenbank_get_route_explanation" in tool_names
     assert "tokenbank_get_task_analysis" in tool_names
+    assert "tokenbank_get_route_score" in tool_names
     assert "chat_completion" not in tool_names
     assert "responses" not in tool_names
     assert all("proxy" not in name for name in tool_names)

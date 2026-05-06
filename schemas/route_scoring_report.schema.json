@@ -179,27 +179,19 @@
   },
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "additionalProperties": false,
-  "description": "Host-safe explanation for a RoutePlan selection.",
+  "description": "Deterministic WP-RB3 scoring report for a RoutePlan candidate set.",
   "properties": {
+    "baseline_selected_candidate_id": {
+      "minLength": 1,
+      "title": "Baseline Selected Candidate Id",
+      "type": "string"
+    },
     "candidate_scores": {
       "items": {
         "$ref": "#/$defs/CandidateScoreTrace"
       },
       "title": "Candidate Scores",
       "type": "array"
-    },
-    "capacity_snapshot_hash": {
-      "minLength": 1,
-      "title": "Capacity Snapshot Hash",
-      "type": "string"
-    },
-    "estimate_summary": {
-      "additionalProperties": true,
-      "propertyNames": {
-        "minLength": 1
-      },
-      "title": "Estimate Summary",
-      "type": "object"
     },
     "reason_codes": {
       "items": {
@@ -216,14 +208,14 @@
       "title": "Rejected Candidates",
       "type": "array"
     },
-    "route_decision_id": {
-      "minLength": 1,
-      "title": "Route Decision Id",
-      "type": "string"
-    },
     "route_plan_id": {
       "minLength": 1,
       "title": "Route Plan Id",
+      "type": "string"
+    },
+    "route_scoring_id": {
+      "minLength": 1,
+      "title": "Route Scoring Id",
       "type": "string"
     },
     "routebook_id": {
@@ -236,18 +228,30 @@
       "title": "Routebook Version",
       "type": "string"
     },
-    "rule_ids": {
-      "items": {
-        "minLength": 1,
-        "type": "string"
-      },
-      "title": "Rule Ids",
-      "type": "array"
-    },
     "schema_version": {
       "const": "p0.v1",
       "default": "p0.v1",
       "title": "Schema Version",
+      "type": "string"
+    },
+    "score_weights": {
+      "additionalProperties": {
+        "type": "number"
+      },
+      "propertyNames": {
+        "minLength": 1
+      },
+      "title": "Score Weights",
+      "type": "object"
+    },
+    "scorer_id": {
+      "minLength": 1,
+      "title": "Scorer Id",
+      "type": "string"
+    },
+    "scorer_version": {
+      "minLength": 1,
+      "title": "Scorer Version",
       "type": "string"
     },
     "selected_candidate_id": {
@@ -255,27 +259,12 @@
       "title": "Selected Candidate Id",
       "type": "string"
     },
-    "task_analysis_hash": {
-      "anyOf": [
-        {
-          "minLength": 1,
-          "type": "string"
-        },
-        {
-          "type": "null"
-        }
+    "selection_status": {
+      "enum": [
+        "selected_highest_scoring_candidate",
+        "no_passing_candidate_keep_existing_selection"
       ],
-      "default": null,
-      "title": "Task Analysis Hash"
-    },
-    "task_profile_hash": {
-      "minLength": 1,
-      "title": "Task Profile Hash",
-      "type": "string"
-    },
-    "user_summary": {
-      "minLength": 1,
-      "title": "User Summary",
+      "title": "Selection Status",
       "type": "string"
     },
     "work_unit_id": {
@@ -285,16 +274,17 @@
     }
   },
   "required": [
-    "route_decision_id",
+    "route_scoring_id",
     "route_plan_id",
     "work_unit_id",
     "routebook_id",
     "routebook_version",
-    "task_profile_hash",
-    "capacity_snapshot_hash",
+    "scorer_id",
+    "scorer_version",
+    "baseline_selected_candidate_id",
     "selected_candidate_id",
-    "user_summary"
+    "selection_status"
   ],
-  "title": "RouteDecisionTrace",
+  "title": "RouteScoringReport",
   "type": "object"
 }

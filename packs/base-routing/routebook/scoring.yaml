@@ -1,0 +1,25 @@
+scorer_id: tokenbank.base.route_scorer
+version: 1.0.0
+selection_policy: highest_scoring_passing_candidate
+score_weights:
+  capability_fit: 0.30
+  policy_fit: 0.25
+  quality_fit: 0.20
+  cost_fit: 0.10
+  latency_fit: 0.05
+  trust_fit: 0.10
+hard_filters:
+  - preflight_allow
+  - task_type_supported
+  - privacy_boundary_allowed
+  - verifier_available_for_L1_L2_L3
+  - backend_class_allowed
+  - worker_direct_api_model_forbidden
+  - credential_boundary_valid
+  - capacity_health_not_quarantined
+  - task_level_not_downgraded
+  - peer_negotiation_complete_for_peer_capacity
+tie_breakers:
+  - routebook_priority_ascending
+  - estimated_cost_micros_ascending
+  - route_candidate_id_ascending

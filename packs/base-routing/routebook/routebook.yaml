@@ -6,3 +6,4 @@ ontology_version: 1.0.0
 default_mode: internal_secure
 files:
   ontology: ontology.yaml
+  scoring: scoring.yaml

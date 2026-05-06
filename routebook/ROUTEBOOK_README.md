@@ -5,8 +5,9 @@ Agent Capacity Network.
 
 WP-RB1 implements the compatibility scaffold under
 `packs/base-routing/routebook/`, and WP-RB2 adds deterministic task analysis and
-token/cost/privacy estimates. These layers do not replace this Phase 0 route
-selection contract.
+token/cost/privacy estimates. WP-RB3 adds deterministic hard filters and
+weighted scoring for candidate selection. These layers do not execute work or
+replace policy, scheduler, worker, backend, or verifier boundaries.
 
 It maps the five P0 work-unit task types to route candidates and verifier
 recipes. The router may read these files to produce a `RoutePlan` only. It must

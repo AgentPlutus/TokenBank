@@ -15,10 +15,17 @@ def test_routebook_v1_loader_reads_manifest_and_ontology() -> None:
 
     assert loaded.routebook_id == "tokenbank.base"
     assert loaded.version == "1.0.0"
-    assert set(loaded.content_hashes) == {"routebook.yaml", "ontology.yaml"}
+    assert set(loaded.content_hashes) == {
+        "routebook.yaml",
+        "ontology.yaml",
+        "scoring.yaml",
+    }
     assert "code" in loaded.task_families
     assert "strong_reasoning" in loaded.capability_tags
     assert "claim_extraction" in loaded.ontology["task_type_defaults"]
+    assert loaded.scoring["selection_policy"] == (
+        "highest_scoring_passing_candidate"
+    )
 
 
 def test_routebook_v1_loader_rejects_missing_required_file(tmp_path: Path) -> None:

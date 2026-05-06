@@ -42,16 +42,18 @@ def test_route_explain_cli_returns_profiles_and_trace(tmp_path: Path) -> None:
     assert payload["route_decision_trace"]["selected_candidate_id"] == (
         "route_url_check_local_tool"
     )
+    assert payload["route_scoring_report"]["selected_candidate_id"] == (
+        "route_url_check_local_tool"
+    )
+    assert payload["route_scoring_hash"]
     assert payload["capacity_profiles"][0]["backend_class"] == "local_tool"
     score_trace = payload["route_decision_trace"]["candidate_scores"][0]
+    assert score_trace["hard_filter_decision"] == "pass"
+    assert score_trace["rank"] == 1
     assert score_trace["hard_filter_results"]["backend_class_allowed"] == "pass"
-    assert score_trace["reason_codes"] == [
-        "backend_class:local_tool",
-        "priority:1",
-        "selected_by_existing_routebook_priority",
-        "verifier_recipe_available",
-        "matches_required_capabilities",
-    ]
+    assert score_trace["weighted_components"]["capability_fit"] > 0
+    assert "scorer:wp_rb3" in score_trace["reason_codes"]
+    assert "matches_required_capabilities" in score_trace["reason_codes"]
 
 
 def test_route_explain_cli_profiles_strong_task_without_executing_it(
@@ -96,21 +98,26 @@ def test_route_explain_cli_profiles_strong_task_without_executing_it(
     assert task_profile["difficulty"] == "high"
     assert task_profile["requires_verifier_recipe_id"] is True
     assert decision_trace["selected_candidate_id"] == "route_claim_model_gateway"
+    assert payload["route_plan"]["selected_candidate_id"] == "route_claim_model_gateway"
+    scoring_report = payload["route_scoring_report"]
+    assert scoring_report["selection_status"] == "selected_highest_scoring_candidate"
+    assert scoring_report["selected_candidate_id"] == "route_claim_model_gateway"
     assert decision_trace["reason_codes"] == [
         "host_model_profiler_only",
-        "phase0_route_selection_unchanged",
-        "selected_by_existing_routebook_priority",
+        "wp_rb3_route_scorer_applied",
+        "selected_by_scored_routebook_candidate",
     ]
     assert decision_trace["rejected_candidates"] == [
         {
             "schema_version": "p0.v1",
             "candidate_id": "route_claim_fallback_primary",
             "reason_codes": [
-                "lower_priority_routebook_candidate",
-                "available_as_fallback_only",
+                "lower_score_than_selected",
             ],
         }
     ]
+    assert decision_trace["candidate_scores"][0]["rank"] == 1
+    assert decision_trace["candidate_scores"][1]["rank"] == 2
     assert any(
         rule_id == "candidate_rule:route_claim_model_gateway"
         for rule_id in decision_trace["rule_ids"]
@@ -120,3 +127,37 @@ def test_route_explain_cli_profiles_strong_task_without_executing_it(
         == "pass"
         for score_trace in decision_trace["candidate_scores"]
     )
+
+
+def test_route_score_cli_returns_scoring_report(tmp_path: Path) -> None:
+    input_path = REPO_ROOT / "tests/fixtures/route_requests/claim_extraction.json"
+    db_path = tmp_path / "tokenbank.db"
+
+    result = CliRunner().invoke(
+        app,
+        [
+            "route",
+            "score",
+            "--task-type",
+            "claim_extraction",
+            "--input",
+            str(input_path),
+            "--db-path",
+            str(db_path),
+            "--config-dir",
+            str(REPO_ROOT / "config"),
+            "--json",
+        ],
+    )
+
+    assert result.exit_code == 0, result.output
+    payload = json.loads(result.output)
+    report = payload["route_scoring_report"]
+
+    assert payload["status"] == "ok"
+    assert payload["route_scoring_hash"]
+    assert report["scorer_id"] == "tokenbank.base.route_scorer"
+    assert report["selected_candidate_id"] == payload["route_plan"][
+        "selected_candidate_id"
+    ]
+    assert report["candidate_scores"][0]["score"]["total"] > 0

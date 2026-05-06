@@ -257,6 +257,8 @@ def sample_payloads() -> dict[str, dict[str, Any]]:
             {
                 "schema_version": "p0.v1",
                 "candidate_id": "rc_001",
+                "rank": 1,
+                "hard_filter_decision": "pass",
                 "score": {
                     "schema_version": "p0.v1",
                     "total": 1.0,
@@ -269,6 +271,7 @@ def sample_payloads() -> dict[str, dict[str, Any]]:
                     "uncertainty_penalty": 0.0,
                 },
                 "hard_filter_results": {"policy_allowed": "pass"},
+                "weighted_components": {"capability_fit": 0.3},
                 "reason_codes": ["selected_candidate"],
             }
         ],
@@ -282,6 +285,30 @@ def sample_payloads() -> dict[str, dict[str, Any]]:
         "reason_codes": ["phase0_route_selection_unchanged"],
         "rule_ids": ["rc_001"],
         "user_summary": "TokenBank kept final route selection inside Core.",
+    }
+    route_scoring_report = {
+        "schema_version": "p0.v1",
+        "route_scoring_id": "rs_rp_001",
+        "route_plan_id": "rp_001",
+        "work_unit_id": "wu_001",
+        "routebook_id": "tokenbank.base",
+        "routebook_version": "1.0.0",
+        "scorer_id": "tokenbank.base.route_scorer",
+        "scorer_version": "1.0.0",
+        "baseline_selected_candidate_id": "rc_001",
+        "selected_candidate_id": "rc_001",
+        "selection_status": "selected_highest_scoring_candidate",
+        "score_weights": {
+            "capability_fit": 0.3,
+            "policy_fit": 0.25,
+            "quality_fit": 0.2,
+            "cost_fit": 0.1,
+            "latency_fit": 0.05,
+            "trust_fit": 0.1,
+        },
+        "candidate_scores": route_decision_trace["candidate_scores"],
+        "rejected_candidates": [],
+        "reason_codes": ["wp_rb3_route_scorer_applied"],
     }
     policy_decision = {
         "schema_version": "p0.v1",
@@ -464,6 +491,7 @@ def sample_payloads() -> dict[str, dict[str, Any]]:
         "route_plan": route_plan,
         "route_candidate": route_candidate,
         "route_decision_trace": route_decision_trace,
+        "route_scoring_report": route_scoring_report,
         "task_analysis_report": task_analysis_report,
         "task_profile": task_profile,
         "policy_decision": policy_decision,

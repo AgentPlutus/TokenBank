@@ -46,13 +46,17 @@ The current implementation includes:
 - WP-RB1 Routebook V1 profile contracts and read-only route explanation.
 - WP-RB2 deterministic task analysis, token/cost estimate, and privacy
   preflight without scheduling work or calling a model.
+- WP-RB3 deterministic route scoring with hard filters, weighted candidate
+  scores, stable scoring reports, CLI/MCP route scoring, and scored RoutePlan
+  selection without scheduling work or calling a model.
 
 ## Non-Goals
 
 TokenBank Phase 0/1 does not implement seller mode, marketplace, payment,
 payout, settlement, account-sharing, OAuth sharing, cookie sharing, API-key
 sharing, real external model calls, multi-provider gateway runtime, scored
-routing, peer negotiation, full dashboard UI, or OpenAI-compatible proxy
+route execution beyond Phase 0 boundaries, peer negotiation, full dashboard UI,
+or OpenAI-compatible proxy
 endpoints.
 
 AI plan yield is Phase 2+ strategy and is not active in Phase 0/1.

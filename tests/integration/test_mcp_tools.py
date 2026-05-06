@@ -21,7 +21,7 @@ def test_mcp_list_capabilities(tmp_path: Path) -> None:
     tools = server.tool_definitions()
     capabilities = server.call_tool("tokenbank_list_capabilities", {})
 
-    assert len(tools) == 8
+    assert len(tools) == 9
     assert [tool["name"] for tool in tools] == [
         "tokenbank_list_capabilities",
         "tokenbank_estimate",
@@ -31,6 +31,7 @@ def test_mcp_list_capabilities(tmp_path: Path) -> None:
         "tokenbank_get_routebook_excerpt",
         "tokenbank_get_route_explanation",
         "tokenbank_get_task_analysis",
+        "tokenbank_get_route_score",
     ]
     assert all("inputSchema" in tool and "outputSchema" in tool for tool in tools)
     assert capabilities["capacity_network"] == "Private Agent Capacity Network"
@@ -172,6 +173,27 @@ def test_mcp_get_task_analysis(tmp_path: Path) -> None:
     assert report["task_type"] == "claim_extraction"
     assert report["complexity"]["requires_strong_reasoning"] is True
     assert report["token_estimate"]["estimated_total_tokens"] > 0
+
+
+def test_mcp_get_route_score(tmp_path: Path) -> None:
+    server = _server(tmp_path)
+
+    score = server.call_tool(
+        "tokenbank_get_route_score",
+        {
+            "task_type": "claim_extraction",
+            "input": {
+                "text": "TokenBank verifies private capacity results.",
+                "source_id": "src_mcp_score",
+            },
+        },
+    )
+
+    assert score["status"] == "ok"
+    report = score["route_scoring_report"]
+    assert report["scorer_id"] == "tokenbank.base.route_scorer"
+    assert report["selection_status"] == "selected_highest_scoring_candidate"
+    assert report["candidate_scores"][0]["hard_filter_decision"] == "pass"
 
 
 def test_mcp_does_not_expose_workspace_resources(tmp_path: Path) -> None:
