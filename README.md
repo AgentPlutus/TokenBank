@@ -1,5 +1,7 @@
 # TokenBank
 
+[![CI](https://github.com/AgentPlutus/TokenBank/actions/workflows/ci.yml/badge.svg)](https://github.com/AgentPlutus/TokenBank/actions/workflows/ci.yml)
+
 TokenBank Phase 0 is a **Private Agent Capacity Network**.
 
 It is the control-plane skeleton for making trusted private agent capacity
@@ -182,3 +184,10 @@ Do not proceed to all five task types until VS0 passes.
 After WP-RB2, do not broaden into scored routing, account ledger, dashboard,
 x-radar, real external model calls, peer negotiation, or multi-provider gateway
 without an explicit work package.
+
+## Contributing And Security
+
+See `CONTRIBUTING.md` for local checks and pull request expectations. See
+`SECURITY.md` for vulnerability reporting and Phase 0 red gates.
+
+This repository is licensed under the MIT License.
