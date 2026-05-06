@@ -8,7 +8,9 @@ from pathlib import Path
 from pydantic import BaseModel
 
 from tokenbank.models import (
+    AccountSnapshot,
     Assignment,
+    AuditReceipt,
     BackendError,
     BackendHealth,
     BackendManifest,
@@ -25,6 +27,7 @@ from tokenbank.models import (
     RouteScoringReport,
     TaskAnalysisReport,
     TaskProfile,
+    UsageLedgerEntry,
     UsageRecord,
     VerifierReport,
     WorkUnit,
@@ -43,6 +46,9 @@ SCHEMA_MODELS: tuple[tuple[str, type[BaseModel]], ...] = (
     ("route_scoring_report", RouteScoringReport),
     ("task_analysis_report", TaskAnalysisReport),
     ("task_profile", TaskProfile),
+    ("account_snapshot", AccountSnapshot),
+    ("usage_ledger_entry", UsageLedgerEntry),
+    ("audit_receipt", AuditReceipt),
     ("policy_decision", PolicyDecision),
     ("execution_attempt", ExecutionAttempt),
     ("assignment", Assignment),

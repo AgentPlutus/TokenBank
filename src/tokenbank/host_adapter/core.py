@@ -10,7 +10,9 @@ from pathlib import Path
 from typing import Any
 
 from tokenbank import PHASE_0_NAME, PRODUCT_NAME
+from tokenbank.accounts import AccountRegistry, build_manual_account_snapshot
 from tokenbank.app.bootstrap import rebuild_capacity_projection_from_config_and_db
+from tokenbank.audit import AuditReceiptRepository
 from tokenbank.backends.registry import BackendRegistry
 from tokenbank.capacity.discovery import discover_capacity_nodes
 from tokenbank.config_runtime.loader import LoadedConfig, load_config_dir
@@ -33,6 +35,7 @@ from tokenbank.host_adapter.normalizer import (
     reject_forbidden_host_input,
 )
 from tokenbank.host_adapter.summaries import host_result_response, routebook_excerpt
+from tokenbank.ledger import UsageLedgerRepository
 from tokenbank.models.route_decision import RouteScoringReport
 from tokenbank.models.route_plan import RouteCandidate, RoutePlan
 from tokenbank.models.work_unit import WorkUnit
@@ -364,6 +367,128 @@ class HostAdapterCore:
         """Return the derived WP11 run-level CostQualityReport."""
         with self._control_plane_context() as (conn, _loaded_config):
             return generate_cost_quality_report(conn, run_id=run_id)
+
+    def list_account_snapshots(
+        self,
+        *,
+        provider: str | None = None,
+        status: str | None = None,
+    ) -> dict[str, Any]:
+        """Return local account snapshots without provider secret values."""
+        with self._control_plane_context() as (conn, _loaded_config):
+            snapshots = AccountRegistry(conn).list_snapshots(
+                provider=provider,
+                status=status,
+            )
+        return {
+            "status": "ok",
+            "snapshot_count": len(snapshots),
+            "snapshots": snapshots,
+        }
+
+    def upsert_manual_account_snapshot(
+        self,
+        *,
+        provider: str,
+        account_label: str,
+        secret_ref: str | None = None,
+        status: str = "configured",
+        balance_source: str = "manual",
+        available_micros: int | None = None,
+        monthly_spend_micros: int | None = None,
+        monthly_budget_micros: int | None = None,
+        requests_per_minute: int | None = None,
+        tokens_per_minute: int | None = None,
+        visible_models: list[str] | None = None,
+    ) -> dict[str, Any]:
+        """Persist one local account snapshot using refs, never raw secrets."""
+        snapshot = build_manual_account_snapshot(
+            provider=provider,
+            account_label=account_label,
+            secret_ref=secret_ref,
+            status=status,  # type: ignore[arg-type]
+            balance_source=balance_source,  # type: ignore[arg-type]
+            available_micros=available_micros,
+            monthly_spend_micros=monthly_spend_micros,
+            monthly_budget_micros=monthly_budget_micros,
+            requests_per_minute=requests_per_minute,
+            tokens_per_minute=tokens_per_minute,
+            visible_models=visible_models,
+        )
+        with self._control_plane_context() as (conn, _loaded_config):
+            result = AccountRegistry(conn).upsert_snapshot(snapshot)
+        return {"status": "ok", **result}
+
+    def refresh_account_snapshots(self) -> dict[str, Any]:
+        """Refresh local account view without calling provider APIs."""
+        with self._control_plane_context() as (conn, _loaded_config):
+            return AccountRegistry(conn).refresh_local()
+
+    def record_usage_ledger_entry(
+        self,
+        *,
+        work_unit_id: str,
+        account_snapshot_id: str | None = None,
+        routebook_v1_dir: str | Path = "packs/base-routing/routebook",
+    ) -> dict[str, Any]:
+        """Record a redacted usage ledger entry for a completed WorkUnit."""
+        with self._control_plane_context() as (conn, _loaded_config):
+            result = UsageLedgerRepository(conn).record_for_work_unit(
+                work_unit_id=work_unit_id,
+                account_snapshot_id=account_snapshot_id,
+                routebook_v1_dir=routebook_v1_dir,
+            )
+        return {"status": "ok", **result}
+
+    def list_usage_ledger_entries(
+        self,
+        *,
+        work_unit_id: str | None = None,
+        run_id: str | None = None,
+    ) -> dict[str, Any]:
+        """List redacted usage ledger entries."""
+        with self._control_plane_context() as (conn, _loaded_config):
+            entries = UsageLedgerRepository(conn).list_entries(
+                work_unit_id=work_unit_id,
+                run_id=run_id,
+            )
+        return {"status": "ok", "entry_count": len(entries), "entries": entries}
+
+    def create_audit_receipt(
+        self,
+        *,
+        work_unit_id: str,
+        usage_ledger_entry_id: str | None = None,
+        account_snapshot_id: str | None = None,
+        routebook_v1_dir: str | Path = "packs/base-routing/routebook",
+    ) -> dict[str, Any]:
+        """Create a redacted audit receipt for an accepted WorkUnit result."""
+        with self._control_plane_context() as (conn, _loaded_config):
+            result = AuditReceiptRepository(conn).create_for_work_unit(
+                work_unit_id=work_unit_id,
+                usage_ledger_entry_id=usage_ledger_entry_id,
+                account_snapshot_id=account_snapshot_id,
+                routebook_v1_dir=routebook_v1_dir,
+            )
+        return {"status": "ok", **result}
+
+    def list_audit_receipts(
+        self,
+        *,
+        work_unit_id: str | None = None,
+        run_id: str | None = None,
+    ) -> dict[str, Any]:
+        """List redacted audit receipts."""
+        with self._control_plane_context() as (conn, _loaded_config):
+            receipts = AuditReceiptRepository(conn).list_receipts(
+                work_unit_id=work_unit_id,
+                run_id=run_id,
+            )
+        return {
+            "status": "ok",
+            "receipt_count": len(receipts),
+            "receipts": receipts,
+        }
 
     def get_artifact(self, *, artifact_ref_id: str) -> dict[str, Any]:
         """Keep artifact reads closed until the redacted artifact store exists."""

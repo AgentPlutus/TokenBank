@@ -32,7 +32,8 @@ app = typer.Typer(
         "VS0 url_check, VS1a dedup, VS1b webpage_extraction, "
         "VS1c topic_classification, and VS1d claim_extraction are "
         "end-to-end; WP11 observability, WP12 MCP, WP-RB1 route "
-        "explanation, and WP-RB2 task analysis are implemented."
+        "explanation, WP-RB2 task analysis, WP-RB3 route scoring, "
+        "and WP-LEDGER1 local ledger/audit receipts are implemented."
     ),
     no_args_is_help=True,
 )
@@ -71,6 +72,18 @@ capacity_app = typer.Typer(
 report_app = typer.Typer(
     add_completion=False,
     help="Derived cost and quality report commands.",
+)
+accounts_app = typer.Typer(
+    add_completion=False,
+    help="Local account snapshot commands.",
+)
+usage_app = typer.Typer(
+    add_completion=False,
+    help="Local usage ledger commands.",
+)
+audit_app = typer.Typer(
+    add_completion=False,
+    help="Hash-backed audit receipt commands.",
 )
 mcp_app = typer.Typer(
     add_completion=False,
@@ -161,7 +174,10 @@ def about() -> None:
         "WP11 adds derived cost/quality memory; WP12 adds HostAdapterCore "
         "and a bounded MCP stdio stub; WP-RB1 adds Routebook V1 profiles "
         "and route explanation without changing route selection. WP-RB2 adds "
-        "deterministic task analysis and token/cost/privacy estimates."
+        "deterministic task analysis and token/cost/privacy estimates. "
+        "WP-RB3 applies deterministic route scoring. WP-LEDGER1 records "
+        "local account snapshots, usage ledger entries, and redacted audit "
+        "receipts."
     )
 
 
@@ -604,6 +620,252 @@ def report_capacity(
     _emit_report(report, json_output=json_output)
 
 
+@accounts_app.command("list")
+def accounts_list(
+    provider: str | None = typer.Option(
+        None,
+        "--provider",
+        help="Optional provider filter.",
+    ),
+    status: str | None = typer.Option(
+        None,
+        "--status",
+        help="Optional account snapshot status filter.",
+    ),
+    json_output: bool = typer.Option(
+        False,
+        "--json",
+        help="Emit machine-readable JSON.",
+    ),
+    config_dir: Path = CONFIG_DIR_OPTION,
+    db_path: Path = DB_PATH_OPTION,
+) -> None:
+    """List local account snapshots without exposing raw credentials."""
+    result = _host_adapter(config_dir, db_path).list_account_snapshots(
+        provider=provider,
+        status=status,
+    )
+    _emit_payload(result, json_output=json_output)
+
+
+@accounts_app.command("snapshot")
+def accounts_snapshot(
+    provider: str = typer.Option(..., "--provider", help="Provider id."),
+    account_label: str = typer.Option(
+        ...,
+        "--account-label",
+        help="Local account label.",
+    ),
+    secret_ref: str | None = typer.Option(
+        None,
+        "--secret-ref",
+        help="Local secret reference such as keychain:, env:, vault:, manual:, none:.",
+    ),
+    status: str = typer.Option(
+        "configured",
+        "--status",
+        help="Snapshot status: configured, unconfigured, error, unknown.",
+    ),
+    balance_source: str = typer.Option(
+        "manual",
+        "--balance-source",
+        help="provider_api, tokenbank_ledger, or manual.",
+    ),
+    available_micros: int | None = typer.Option(
+        None,
+        "--available-micros",
+        help="Optional available balance in integer micros.",
+    ),
+    monthly_spend_micros: int | None = typer.Option(
+        None,
+        "--monthly-spend-micros",
+        help="Optional monthly spend in integer micros.",
+    ),
+    monthly_budget_micros: int | None = typer.Option(
+        None,
+        "--monthly-budget-micros",
+        help="Optional monthly budget in integer micros.",
+    ),
+    requests_per_minute: int | None = typer.Option(
+        None,
+        "--requests-per-minute",
+        help="Optional local rate-limit hint.",
+    ),
+    tokens_per_minute: int | None = typer.Option(
+        None,
+        "--tokens-per-minute",
+        help="Optional local token rate-limit hint.",
+    ),
+    visible_models: str | None = typer.Option(
+        None,
+        "--visible-models",
+        help="Comma-separated model ids visible to this local account.",
+    ),
+    json_output: bool = typer.Option(
+        False,
+        "--json",
+        help="Emit machine-readable JSON.",
+    ),
+    config_dir: Path = CONFIG_DIR_OPTION,
+    db_path: Path = DB_PATH_OPTION,
+) -> None:
+    """Create or update a local account snapshot using refs only."""
+    try:
+        result = _host_adapter(config_dir, db_path).upsert_manual_account_snapshot(
+            provider=provider,
+            account_label=account_label,
+            secret_ref=secret_ref,
+            status=status,
+            balance_source=balance_source,
+            available_micros=available_micros,
+            monthly_spend_micros=monthly_spend_micros,
+            monthly_budget_micros=monthly_budget_micros,
+            requests_per_minute=requests_per_minute,
+            tokens_per_minute=tokens_per_minute,
+            visible_models=_parse_csv_list(visible_models),
+        )
+    except ValueError as exc:
+        raise typer.BadParameter(
+            "invalid account snapshot: raw credential-like values are not allowed"
+        ) from exc
+    _emit_payload(result, json_output=json_output)
+
+
+@accounts_app.command("refresh")
+def accounts_refresh(
+    json_output: bool = typer.Option(
+        False,
+        "--json",
+        help="Emit machine-readable JSON.",
+    ),
+    config_dir: Path = CONFIG_DIR_OPTION,
+    db_path: Path = DB_PATH_OPTION,
+) -> None:
+    """Refresh the local account view without provider API calls."""
+    result = _host_adapter(config_dir, db_path).refresh_account_snapshots()
+    _emit_payload(result, json_output=json_output)
+
+
+@usage_app.command("record")
+def usage_record(
+    work_unit_id: str = typer.Option(..., "--work-unit-id", help="Work Unit id."),
+    account_snapshot_id: str | None = typer.Option(
+        None,
+        "--account-snapshot-id",
+        help="Optional local account snapshot id.",
+    ),
+    routebook_v1_dir: Path = ROUTEBOOK_V1_DIR_OPTION,
+    json_output: bool = typer.Option(
+        False,
+        "--json",
+        help="Emit machine-readable JSON.",
+    ),
+    config_dir: Path = CONFIG_DIR_OPTION,
+    db_path: Path = DB_PATH_OPTION,
+) -> None:
+    """Record a usage ledger entry for a completed WorkUnit."""
+    try:
+        result = _host_adapter(config_dir, db_path).record_usage_ledger_entry(
+            work_unit_id=work_unit_id,
+            account_snapshot_id=account_snapshot_id,
+            routebook_v1_dir=routebook_v1_dir,
+        )
+    except (KeyError, ValueError) as exc:
+        raise typer.BadParameter(str(exc)) from exc
+    _emit_payload(result, json_output=json_output)
+
+
+@usage_app.command("ledger")
+def usage_ledger(
+    work_unit_id: str | None = typer.Option(
+        None,
+        "--work-unit-id",
+        help="Optional Work Unit id filter.",
+    ),
+    run_id: str | None = typer.Option(
+        None,
+        "--run-id",
+        help="Optional run id filter.",
+    ),
+    json_output: bool = typer.Option(
+        False,
+        "--json",
+        help="Emit machine-readable JSON.",
+    ),
+    config_dir: Path = CONFIG_DIR_OPTION,
+    db_path: Path = DB_PATH_OPTION,
+) -> None:
+    """List redacted usage ledger entries."""
+    result = _host_adapter(config_dir, db_path).list_usage_ledger_entries(
+        work_unit_id=work_unit_id,
+        run_id=run_id,
+    )
+    _emit_payload(result, json_output=json_output)
+
+
+@audit_app.command("receipt")
+def audit_receipt(
+    work_unit_id: str = typer.Option(..., "--work-unit-id", help="Work Unit id."),
+    usage_ledger_entry_id: str | None = typer.Option(
+        None,
+        "--usage-ledger-entry-id",
+        help="Optional existing usage ledger entry id.",
+    ),
+    account_snapshot_id: str | None = typer.Option(
+        None,
+        "--account-snapshot-id",
+        help="Optional local account snapshot id used if usage must be recorded.",
+    ),
+    routebook_v1_dir: Path = ROUTEBOOK_V1_DIR_OPTION,
+    json_output: bool = typer.Option(
+        False,
+        "--json",
+        help="Emit machine-readable JSON.",
+    ),
+    config_dir: Path = CONFIG_DIR_OPTION,
+    db_path: Path = DB_PATH_OPTION,
+) -> None:
+    """Create or return a redacted audit receipt for an accepted result."""
+    try:
+        result = _host_adapter(config_dir, db_path).create_audit_receipt(
+            work_unit_id=work_unit_id,
+            usage_ledger_entry_id=usage_ledger_entry_id,
+            account_snapshot_id=account_snapshot_id,
+            routebook_v1_dir=routebook_v1_dir,
+        )
+    except (KeyError, ValueError) as exc:
+        raise typer.BadParameter(str(exc)) from exc
+    _emit_payload(result, json_output=json_output)
+
+
+@audit_app.command("list")
+def audit_list(
+    work_unit_id: str | None = typer.Option(
+        None,
+        "--work-unit-id",
+        help="Optional Work Unit id filter.",
+    ),
+    run_id: str | None = typer.Option(
+        None,
+        "--run-id",
+        help="Optional run id filter.",
+    ),
+    json_output: bool = typer.Option(
+        False,
+        "--json",
+        help="Emit machine-readable JSON.",
+    ),
+    config_dir: Path = CONFIG_DIR_OPTION,
+    db_path: Path = DB_PATH_OPTION,
+) -> None:
+    """List redacted audit receipts."""
+    result = _host_adapter(config_dir, db_path).list_audit_receipts(
+        work_unit_id=work_unit_id,
+        run_id=run_id,
+    )
+    _emit_payload(result, json_output=json_output)
+
+
 @demo_capacity_app.command("run")
 def demo_capacity_run(
     task: str | None = typer.Option(
@@ -657,6 +919,9 @@ app.add_typer(workunit_app, name="workunit")
 app.add_typer(route_app, name="route")
 app.add_typer(capacity_app, name="capacity")
 app.add_typer(report_app, name="report")
+app.add_typer(accounts_app, name="accounts")
+app.add_typer(usage_app, name="usage")
+app.add_typer(audit_app, name="audit")
 app.add_typer(mcp_app, name="mcp")
 app.add_typer(demo_app, name="demo")
 
@@ -693,6 +958,12 @@ def _parse_string_list(
             f"{parameter_name} must be a JSON string array"
         )
     return parsed
+
+
+def _parse_csv_list(value: str | None) -> list[str] | None:
+    if value is None:
+        return None
+    return [item.strip() for item in value.split(",") if item.strip()]
 
 
 def _emit_report(report: dict, *, json_output: bool) -> None:

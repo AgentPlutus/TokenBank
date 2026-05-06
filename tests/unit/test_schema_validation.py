@@ -440,6 +440,102 @@ def sample_payloads() -> dict[str, dict[str, Any]]:
         "metadata": {},
         "created_at": "2026-05-04T00:00:08Z",
     }
+    account_snapshot = {
+        "schema_version": "p0.v1",
+        "account_snapshot_id": "acct_001",
+        "provider": "openai",
+        "account_label": "personal",
+        "status": "configured",
+        "secret_ref": "keychain:tokenbank/openai/personal",
+        "secret_ref_status": "present",
+        "raw_secret_present": False,
+        "balance": {
+            "schema_version": "p0.v1",
+            "source": "manual",
+            "available_micros": 25000000,
+            "monthly_spend_micros": 1250000,
+            "monthly_budget_micros": 100000000,
+            "confidence": 0.7,
+            "captured_at": "2026-05-04T00:00:08Z",
+        },
+        "rate_limits": {
+            "schema_version": "p0.v1",
+            "requests_per_minute": 120,
+            "tokens_per_minute": 120000,
+            "concurrent_requests": 4,
+            "source": "manual",
+            "captured_at": "2026-05-04T00:00:08Z",
+        },
+        "visible_models": ["gpt-5.5"],
+        "evidence_hash": canonical_json_hash({"source": "manual"}),
+        "reason_codes": ["manual_local_snapshot"],
+        "captured_at": "2026-05-04T00:00:08Z",
+    }
+    usage_ledger_without_hash = {
+        "schema_version": "p0.v1",
+        "usage_ledger_entry_id": "ule_001",
+        "work_unit_id": "wu_001",
+        "run_id": "run_001",
+        "route_plan_id": "rp_001",
+        "result_envelope_id": "res_001",
+        "verifier_report_id": "vr_001",
+        "account_snapshot_id": "acct_001",
+        "routebook_id": "tokenbank.base",
+        "routebook_version": "1.0.0",
+        "capacity_node_id": "capnode:tool:url_check:v0",
+        "capacity_profile_id": "cp_backend_url_check_v0",
+        "backend_id": "backend:url_check:v0",
+        "provider_id": None,
+        "model_id": None,
+        "estimated_input_tokens": 1,
+        "estimated_output_tokens": 1,
+        "estimated_total_tokens": 2,
+        "reported_input_tokens": None,
+        "reported_output_tokens": None,
+        "reported_total_tokens": None,
+        "estimated_cost_micros": 0,
+        "reported_cost_micros": None,
+        "billable_cost_micros": 0,
+        "usage_source": "estimate",
+        "cost_source": "not_applicable",
+        "verifier_recommendation": "accept",
+        "created_at": "2026-05-04T00:00:08Z",
+    }
+    usage_ledger_entry = {
+        **usage_ledger_without_hash,
+        "entry_hash": canonical_json_hash(usage_ledger_without_hash),
+    }
+    audit_receipt_without_hash = {
+        "schema_version": "p0.v1",
+        "audit_receipt_id": "ar_001",
+        "work_unit_id": "wu_001",
+        "run_id": "run_001",
+        "route_plan_id": "rp_001",
+        "assignment_id": "asg_001",
+        "result_envelope_id": "res_001",
+        "verifier_report_id": "vr_001",
+        "usage_ledger_entry_id": "ule_001",
+        "routebook_id": "tokenbank.base",
+        "routebook_version": "1.0.0",
+        "status": "accepted",
+        "work_unit_hash": canonical_json_hash(work_unit),
+        "route_plan_hash": canonical_json_hash(route_plan),
+        "assignment_hash": canonical_json_hash(assignment),
+        "result_hash": res_hash,
+        "result_envelope_hash": canonical_json_hash(result_envelope),
+        "verifier_report_hash": canonical_json_hash(verifier_report),
+        "usage_ledger_entry_hash": usage_ledger_entry["entry_hash"],
+        "task_analysis_hash": canonical_json_hash(task_analysis_report),
+        "task_profile_hash": canonical_json_hash(task_profile),
+        "previous_receipt_hash": None,
+        "redaction_profile": "ids_and_hashes_only",
+        "reason_codes": ["hash_chain_work_unit_to_verifier_report"],
+        "created_at": "2026-05-04T00:00:09Z",
+    }
+    audit_receipt = {
+        **audit_receipt_without_hash,
+        "receipt_hash": canonical_json_hash(audit_receipt_without_hash),
+    }
     cost_summary = {
         "schema_version": "p0.v1",
         "estimated_cost_micros": 0,
@@ -494,6 +590,9 @@ def sample_payloads() -> dict[str, dict[str, Any]]:
         "route_scoring_report": route_scoring_report,
         "task_analysis_report": task_analysis_report,
         "task_profile": task_profile,
+        "account_snapshot": account_snapshot,
+        "usage_ledger_entry": usage_ledger_entry,
+        "audit_receipt": audit_receipt,
         "policy_decision": policy_decision,
         "execution_attempt": attempt,
         "assignment": assignment,
@@ -531,7 +630,11 @@ def test_forbidden_nested_phase0_fields_are_rejected() -> None:
 def test_money_like_fields_use_integer_micros() -> None:
     payloads = sample_payloads()
 
-    for schema_name in ("usage_record", "host_cost_quality_summary"):
+    for schema_name in (
+        "usage_record",
+        "usage_ledger_entry",
+        "host_cost_quality_summary",
+    ):
         payload = payloads[schema_name]
         for field_name, value in payload.items():
             if field_name.endswith("_micros") and value is not None:

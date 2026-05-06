@@ -49,6 +49,9 @@ The current implementation includes:
 - WP-RB3 deterministic route scoring with hard filters, weighted candidate
   scores, stable scoring reports, CLI/MCP route scoring, and scored RoutePlan
   selection without scheduling work or calling a model.
+- WP-LEDGER1 local account snapshots, usage ledger entries, and redacted audit
+  receipts for accepted results, with credential refs and hashes instead of raw
+  secrets or raw outputs.
 
 ## Non-Goals
 

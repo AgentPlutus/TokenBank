@@ -1,0 +1,273 @@
+{
+  "$defs": {
+    "BalanceSnapshot": {
+      "additionalProperties": false,
+      "properties": {
+        "available_micros": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Available Micros"
+        },
+        "captured_at": {
+          "format": "date-time",
+          "title": "Captured At",
+          "type": "string"
+        },
+        "confidence": {
+          "default": 0.5,
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Confidence",
+          "type": "number"
+        },
+        "monthly_budget_micros": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Monthly Budget Micros"
+        },
+        "monthly_spend_micros": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Monthly Spend Micros"
+        },
+        "schema_version": {
+          "const": "p0.v1",
+          "default": "p0.v1",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "source": {
+          "default": "manual",
+          "enum": [
+            "provider_api",
+            "tokenbank_ledger",
+            "manual"
+          ],
+          "title": "Source",
+          "type": "string"
+        }
+      },
+      "title": "BalanceSnapshot",
+      "type": "object"
+    },
+    "RateLimitSnapshot": {
+      "additionalProperties": false,
+      "properties": {
+        "captured_at": {
+          "format": "date-time",
+          "title": "Captured At",
+          "type": "string"
+        },
+        "concurrent_requests": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Concurrent Requests"
+        },
+        "requests_per_minute": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Requests Per Minute"
+        },
+        "schema_version": {
+          "const": "p0.v1",
+          "default": "p0.v1",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "source": {
+          "default": "manual",
+          "enum": [
+            "provider_api",
+            "tokenbank_ledger",
+            "manual"
+          ],
+          "title": "Source",
+          "type": "string"
+        },
+        "tokens_per_minute": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Tokens Per Minute"
+        }
+      },
+      "title": "RateLimitSnapshot",
+      "type": "object"
+    }
+  },
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "Host-local account visibility without raw provider credentials.",
+  "properties": {
+    "account_label": {
+      "minLength": 1,
+      "title": "Account Label",
+      "type": "string"
+    },
+    "account_snapshot_id": {
+      "minLength": 1,
+      "title": "Account Snapshot Id",
+      "type": "string"
+    },
+    "balance": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/BalanceSnapshot"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "captured_at": {
+      "format": "date-time",
+      "title": "Captured At",
+      "type": "string"
+    },
+    "evidence_hash": {
+      "anyOf": [
+        {
+          "minLength": 1,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Evidence Hash"
+    },
+    "provider": {
+      "minLength": 1,
+      "title": "Provider",
+      "type": "string"
+    },
+    "rate_limits": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/RateLimitSnapshot"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "raw_secret_present": {
+      "default": false,
+      "title": "Raw Secret Present",
+      "type": "boolean"
+    },
+    "reason_codes": {
+      "items": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "title": "Reason Codes",
+      "type": "array"
+    },
+    "schema_version": {
+      "const": "p0.v1",
+      "default": "p0.v1",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "secret_ref": {
+      "anyOf": [
+        {
+          "minLength": 1,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Secret Ref"
+    },
+    "secret_ref_status": {
+      "default": "unknown",
+      "enum": [
+        "present",
+        "missing",
+        "unknown"
+      ],
+      "title": "Secret Ref Status",
+      "type": "string"
+    },
+    "status": {
+      "default": "unknown",
+      "enum": [
+        "configured",
+        "unconfigured",
+        "error",
+        "unknown"
+      ],
+      "title": "Status",
+      "type": "string"
+    },
+    "visible_models": {
+      "items": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "title": "Visible Models",
+      "type": "array"
+    }
+  },
+  "required": [
+    "account_snapshot_id",
+    "provider",
+    "account_label"
+  ],
+  "title": "AccountSnapshot",
+  "type": "object"
+}

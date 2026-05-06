@@ -17,6 +17,8 @@ The next phase is blocked if any of these occur:
 - HostAdapter recursively reads a workspace
 - critical state transition lacks an `event_outbox` row
 - `capacity_nodes` drifts from worker/backend manifests
+- raw credential appears in `account_snapshots`, `usage_ledger_entries`, or
+  `audit_receipts`
 
 ## Credential Boundary
 
@@ -29,6 +31,19 @@ fixtures.
 Control-plane gateway stubs never serialize provider tokens. Workers must not
 call API model providers directly. The HostAdapter rejects credential-shaped
 input.
+
+## Ledger And Audit Boundary
+
+WP-LEDGER1 keeps ledger and receipt data local to the Private Agent Capacity
+Network control plane. `AccountSnapshot` may store a local reference such as a
+keychain, environment, vault, manual, or none reference. It must not store the
+raw credential behind that reference.
+
+`UsageLedgerEntry` records estimated versus provider-reported usage and cost
+separately. `AuditReceipt` exports ids and hashes only. Receipts link
+WorkUnit, RoutePlan, Assignment, ResultEnvelope, VerifierReport, and optional
+UsageLedgerEntry evidence without embedding raw prompts, raw outputs, bearer
+tokens, cookies, or provider credentials.
 
 ## HostAdapter And MCP
 
