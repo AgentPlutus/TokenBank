@@ -1,0 +1,8 @@
+routebook_id: tokenbank.base
+version: 1.0.0
+phase: phase_1_personal_routing
+compatible_core_min: 0.1.0
+ontology_version: 1.0.0
+default_mode: internal_secure
+files:
+  ontology: ontology.yaml

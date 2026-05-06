@@ -1,0 +1,9 @@
+sandbox_profile:
+  profile_id: demo_default
+  allowed_paths:
+    - /tmp/tokenbank
+  deny_recursive_workspace_access: true
+  require_shell_allowlist: true
+  max_deadline_ms: 30000
+  max_attempts: 1
+

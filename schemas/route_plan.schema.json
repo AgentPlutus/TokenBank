@@ -1,0 +1,187 @@
+{
+  "$defs": {
+    "RouteCandidate": {
+      "additionalProperties": false,
+      "properties": {
+        "backend_class": {
+          "enum": [
+            "local_tool",
+            "local_script",
+            "browser_fetch",
+            "local_model",
+            "api_model_gateway",
+            "primary_model_gateway"
+          ],
+          "title": "Backend Class",
+          "type": "string"
+        },
+        "backend_id": {
+          "minLength": 1,
+          "title": "Backend Id",
+          "type": "string"
+        },
+        "capacity_node_id": {
+          "minLength": 1,
+          "title": "Capacity Node Id",
+          "type": "string"
+        },
+        "estimated_cost_micros": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Estimated Cost Micros",
+          "type": "integer"
+        },
+        "policy_hints": {
+          "items": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "title": "Policy Hints",
+          "type": "array"
+        },
+        "priority": {
+          "default": 1,
+          "exclusiveMinimum": 0,
+          "title": "Priority",
+          "type": "integer"
+        },
+        "route_candidate_id": {
+          "minLength": 1,
+          "title": "Route Candidate Id",
+          "type": "string"
+        },
+        "schema_version": {
+          "const": "p0.v1",
+          "default": "p0.v1",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "verifier_recipe_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Verifier Recipe Id"
+        },
+        "worker_selector": {
+          "additionalProperties": true,
+          "title": "Worker Selector",
+          "type": "object"
+        }
+      },
+      "required": [
+        "route_candidate_id",
+        "capacity_node_id",
+        "backend_class",
+        "backend_id"
+      ],
+      "title": "RouteCandidate",
+      "type": "object"
+    }
+  },
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "candidates": {
+      "items": {
+        "$ref": "#/$defs/RouteCandidate"
+      },
+      "minItems": 1,
+      "title": "Candidates",
+      "type": "array"
+    },
+    "created_at": {
+      "format": "date-time",
+      "title": "Created At",
+      "type": "string"
+    },
+    "policy_hints": {
+      "items": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "title": "Policy Hints",
+      "type": "array"
+    },
+    "risk_level": {
+      "default": "low",
+      "enum": [
+        "low",
+        "medium",
+        "high"
+      ],
+      "title": "Risk Level",
+      "type": "string"
+    },
+    "route_plan_id": {
+      "minLength": 1,
+      "title": "Route Plan Id",
+      "type": "string"
+    },
+    "schema_version": {
+      "const": "p0.v1",
+      "default": "p0.v1",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "selected_candidate_id": {
+      "minLength": 1,
+      "title": "Selected Candidate Id",
+      "type": "string"
+    },
+    "task_level": {
+      "enum": [
+        "L0",
+        "L1",
+        "L2",
+        "L3"
+      ],
+      "title": "Task Level",
+      "type": "string"
+    },
+    "task_type": {
+      "minLength": 1,
+      "title": "Task Type",
+      "type": "string"
+    },
+    "validated_at": {
+      "anyOf": [
+        {
+          "format": "date-time",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Validated At"
+    },
+    "verifier_recipe_id": {
+      "minLength": 1,
+      "title": "Verifier Recipe Id",
+      "type": "string"
+    },
+    "work_unit_id": {
+      "minLength": 1,
+      "title": "Work Unit Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "route_plan_id",
+    "work_unit_id",
+    "task_type",
+    "task_level",
+    "candidates",
+    "selected_candidate_id",
+    "verifier_recipe_id"
+  ],
+  "title": "RoutePlan",
+  "type": "object"
+}

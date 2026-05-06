@@ -1,0 +1,25 @@
+backend_policy:
+  allowed_backend_ids:
+    - backend:url_check:v0
+    - backend:browser_fetch:v0
+    - backend:dedup:local_script:v0
+    - backend:webpage_extraction:browser_fetch:v0
+    - backend:api_model_gateway:l1_structured
+    - backend:topic_classification:api_gateway:v0
+    - backend:claim_extraction:api_gateway:v0
+    - backend:primary_model_gateway:v0
+    - backend:claim_extraction:primary_gateway:v0
+  allowed_backend_classes:
+    - local_tool
+    - local_script
+    - browser_fetch
+    - api_model_gateway
+    - primary_model_gateway
+  forbidden_backend_classes:
+    - account_pool
+    - oauth_proxy
+    - credential_broker
+    - external_seller
+  api_backend_classes:
+    - api_model_gateway
+    - primary_model_gateway

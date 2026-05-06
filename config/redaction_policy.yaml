@@ -1,0 +1,9 @@
+redaction_policy:
+  token_prefix_patterns:
+    - tbk_h_[A-Za-z0-9_]+
+    - tbk_w_[A-Za-z0-9_]+
+    - tbk_i_[A-Za-z0-9_]+
+  replacement: "[REDACTED_TOKEN]"
+  scan_logs: true
+  scan_reports: true
+

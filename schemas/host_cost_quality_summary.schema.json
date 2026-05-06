@@ -1,0 +1,146 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "actual_cost_micros": {
+      "default": 0,
+      "minimum": 0,
+      "title": "Actual Cost Micros",
+      "type": "integer"
+    },
+    "audit_status": {
+      "default": "unknown",
+      "enum": [
+        "clean",
+        "warning",
+        "quarantined",
+        "unknown"
+      ],
+      "title": "Audit Status",
+      "type": "string"
+    },
+    "baseline_cost_micros": {
+      "anyOf": [
+        {
+          "minimum": 0,
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Baseline Cost Micros"
+    },
+    "baseline_mode": {
+      "default": "none",
+      "minLength": 1,
+      "title": "Baseline Mode",
+      "type": "string"
+    },
+    "caveats": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Caveats",
+      "type": "array"
+    },
+    "cost_confidence": {
+      "default": "not_applicable",
+      "enum": [
+        "low",
+        "medium",
+        "high",
+        "not_applicable"
+      ],
+      "title": "Cost Confidence",
+      "type": "string"
+    },
+    "cost_source": {
+      "default": "not_applicable",
+      "enum": [
+        "measured",
+        "estimated",
+        "policy_default",
+        "zero_internal_phase0",
+        "not_applicable"
+      ],
+      "title": "Cost Source",
+      "type": "string"
+    },
+    "estimated_cost_micros": {
+      "default": 0,
+      "minimum": 0,
+      "title": "Estimated Cost Micros",
+      "type": "integer"
+    },
+    "local_zero_cost_caveat": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Local Zero Cost Caveat"
+    },
+    "primary_model_fallback_cost_micros": {
+      "default": 0,
+      "minimum": 0,
+      "title": "Primary Model Fallback Cost Micros",
+      "type": "integer"
+    },
+    "primary_model_fallback_used": {
+      "default": false,
+      "title": "Primary Model Fallback Used",
+      "type": "boolean"
+    },
+    "quality_status": {
+      "default": "unknown",
+      "enum": [
+        "passed",
+        "failed",
+        "needs_review",
+        "unknown"
+      ],
+      "title": "Quality Status",
+      "type": "string"
+    },
+    "saving_ratio_bps": {
+      "anyOf": [
+        {
+          "minimum": 0,
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Cost saving ratio in basis points; 10000 means 100 percent.",
+      "title": "Saving Ratio Bps"
+    },
+    "schema_version": {
+      "const": "p0.v1",
+      "default": "p0.v1",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "verifier_passed": {
+      "anyOf": [
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Verifier Passed"
+    }
+  },
+  "title": "HostCostQualitySummary",
+  "type": "object"
+}

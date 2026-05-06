@@ -1,0 +1,92 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "actual_cost_micros": {
+      "default": 0,
+      "minimum": 0,
+      "title": "Actual Cost Micros",
+      "type": "integer"
+    },
+    "attempt_id": {
+      "minLength": 1,
+      "title": "Attempt Id",
+      "type": "string"
+    },
+    "backend_id": {
+      "minLength": 1,
+      "title": "Backend Id",
+      "type": "string"
+    },
+    "cost_confidence": {
+      "default": "not_applicable",
+      "enum": [
+        "low",
+        "medium",
+        "high",
+        "not_applicable"
+      ],
+      "title": "Cost Confidence",
+      "type": "string"
+    },
+    "cost_source": {
+      "default": "not_applicable",
+      "enum": [
+        "measured",
+        "estimated",
+        "policy_default",
+        "zero_internal_phase0",
+        "not_applicable"
+      ],
+      "title": "Cost Source",
+      "type": "string"
+    },
+    "estimated_cost_micros": {
+      "default": 0,
+      "minimum": 0,
+      "title": "Estimated Cost Micros",
+      "type": "integer"
+    },
+    "input_units": {
+      "default": 0,
+      "minimum": 0,
+      "title": "Input Units",
+      "type": "integer"
+    },
+    "output_units": {
+      "default": 0,
+      "minimum": 0,
+      "title": "Output Units",
+      "type": "integer"
+    },
+    "recorded_at": {
+      "format": "date-time",
+      "title": "Recorded At",
+      "type": "string"
+    },
+    "schema_version": {
+      "const": "p0.v1",
+      "default": "p0.v1",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "usage_record_id": {
+      "minLength": 1,
+      "title": "Usage Record Id",
+      "type": "string"
+    },
+    "work_unit_id": {
+      "minLength": 1,
+      "title": "Work Unit Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "usage_record_id",
+    "work_unit_id",
+    "attempt_id",
+    "backend_id"
+  ],
+  "title": "UsageRecord",
+  "type": "object"
+}

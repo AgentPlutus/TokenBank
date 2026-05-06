@@ -1,0 +1,45 @@
+{
+  "manifest_id": "private_capacity_demo_v0",
+  "capacity_network": "Private Agent Capacity Network",
+  "description": "Phase 0 demo dataset covering the five supported Work Unit task types.",
+  "xradar_required": false,
+  "task_mix": [
+    {
+      "task_type": "url_check",
+      "fixture": "urls.json",
+      "expected_backend_class": "local_tool",
+      "expected_worker": "wrk_demo_local"
+    },
+    {
+      "task_type": "dedup",
+      "fixture": "dedup.json",
+      "expected_backend_class": "local_script",
+      "expected_worker": "wrk_demo_local"
+    },
+    {
+      "task_type": "webpage_extraction",
+      "fixture": "webpage_extraction.json",
+      "expected_backend_class": "browser_fetch",
+      "expected_worker": "wrk_demo_local"
+    },
+    {
+      "task_type": "topic_classification",
+      "fixture": "topic_classification.json",
+      "expected_backend_class": "api_model_gateway",
+      "expected_worker": "wrk_control_plane_gateway"
+    },
+    {
+      "task_type": "claim_extraction",
+      "fixture": "claim_extraction.json",
+      "expected_backend_class": "api_model_gateway",
+      "expected_worker": "wrk_control_plane_gateway"
+    }
+  ],
+  "expected_coverage": {
+    "capacity_discovery": true,
+    "host_result_summary": true,
+    "cost_quality_memory": true,
+    "model_proxy": false,
+    "credential_sharing": false
+  }
+}

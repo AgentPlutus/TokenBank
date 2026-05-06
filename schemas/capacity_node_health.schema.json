@@ -1,0 +1,69 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "active_assignments": {
+      "default": 0,
+      "minimum": 0,
+      "title": "Active Assignments",
+      "type": "integer"
+    },
+    "capacity_node_id": {
+      "minLength": 1,
+      "title": "Capacity Node Id",
+      "type": "string"
+    },
+    "checked_at": {
+      "format": "date-time",
+      "title": "Checked At",
+      "type": "string"
+    },
+    "latency_ms": {
+      "anyOf": [
+        {
+          "minimum": 0,
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Latency Ms"
+    },
+    "message": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Message"
+    },
+    "schema_version": {
+      "const": "p0.v1",
+      "default": "p0.v1",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "status": {
+      "default": "unknown",
+      "enum": [
+        "healthy",
+        "degraded",
+        "unhealthy",
+        "unknown"
+      ],
+      "title": "Status",
+      "type": "string"
+    }
+  },
+  "required": [
+    "capacity_node_id"
+  ],
+  "title": "CapacityNodeHealth",
+  "type": "object"
+}

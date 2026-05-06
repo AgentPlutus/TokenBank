@@ -1,0 +1,42 @@
+backend_classes:
+  - backend_class: local_tool
+    execution_path: worker_local
+  - backend_class: local_script
+    execution_path: worker_local
+  - backend_class: browser_fetch
+    execution_path: worker_local
+  - backend_class: api_model_gateway
+    execution_path: control_plane_gateway
+  - backend_class: primary_model_gateway
+    execution_path: control_plane_gateway
+candidate_rules:
+  - rule_id: route_url_check_local_tool
+    task_type: url_check
+    backend_class: local_tool
+    backend_id: backend:url_check:v0
+    priority: 1
+  - rule_id: route_dedup_local_script
+    task_type: dedup
+    backend_class: local_script
+    backend_id: backend:dedup:local_script:v0
+    priority: 1
+  - rule_id: route_topic_model_gateway
+    task_type: topic_classification
+    backend_class: api_model_gateway
+    backend_id: backend:topic_classification:api_gateway:v0
+    priority: 1
+  - rule_id: route_claim_model_gateway
+    task_type: claim_extraction
+    backend_class: api_model_gateway
+    backend_id: backend:claim_extraction:api_gateway:v0
+    priority: 1
+  - rule_id: route_claim_fallback_primary
+    task_type: claim_extraction
+    backend_class: primary_model_gateway
+    backend_id: backend:claim_extraction:primary_gateway:v0
+    priority: 2
+  - rule_id: route_webpage_browser_fetch
+    task_type: webpage_extraction
+    backend_class: browser_fetch
+    backend_id: backend:webpage_extraction:browser_fetch:v0
+    priority: 1

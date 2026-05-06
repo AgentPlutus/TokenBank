@@ -1,0 +1,14 @@
+{
+  "mcpServers": {
+    "tokenbank": {
+      "command": "uv",
+      "args": [
+        "run",
+        "tokenbank",
+        "mcp",
+        "serve"
+      ],
+      "env": {}
+    }
+  }
+}

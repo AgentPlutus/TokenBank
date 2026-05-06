@@ -1,0 +1,70 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "checks": {
+      "items": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "title": "Checks",
+      "type": "array"
+    },
+    "decided_at": {
+      "format": "date-time",
+      "title": "Decided At",
+      "type": "string"
+    },
+    "decision": {
+      "enum": [
+        "approved",
+        "denied",
+        "needs_review"
+      ],
+      "title": "Decision",
+      "type": "string"
+    },
+    "effective_constraints": {
+      "additionalProperties": true,
+      "title": "Effective Constraints",
+      "type": "object"
+    },
+    "policy_decision_id": {
+      "minLength": 1,
+      "title": "Policy Decision Id",
+      "type": "string"
+    },
+    "reasons": {
+      "items": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "title": "Reasons",
+      "type": "array"
+    },
+    "route_plan_id": {
+      "minLength": 1,
+      "title": "Route Plan Id",
+      "type": "string"
+    },
+    "schema_version": {
+      "const": "p0.v1",
+      "default": "p0.v1",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "work_unit_id": {
+      "minLength": 1,
+      "title": "Work Unit Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "policy_decision_id",
+    "work_unit_id",
+    "route_plan_id",
+    "decision"
+  ],
+  "title": "PolicyDecision",
+  "type": "object"
+}

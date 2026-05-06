@@ -1,0 +1,10 @@
+{
+  "text": "The private capacity worker stores software cost and quality evidence for engineering review.",
+  "allowed_labels": [
+    "engineering",
+    "science",
+    "finance",
+    "policy",
+    "general"
+  ]
+}

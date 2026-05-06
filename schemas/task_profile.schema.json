@@ -1,0 +1,253 @@
+{
+  "$defs": {
+    "AmbiguityProfile": {
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {
+          "const": "p0.v1",
+          "default": "p0.v1",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "status": {
+          "default": "unknown",
+          "enum": [
+            "low",
+            "medium",
+            "high",
+            "unknown"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "unresolved_questions": {
+          "items": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "title": "Unresolved Questions",
+          "type": "array"
+        }
+      },
+      "title": "AmbiguityProfile",
+      "type": "object"
+    },
+    "RequiredCapability": {
+      "additionalProperties": false,
+      "properties": {
+        "capability": {
+          "minLength": 1,
+          "title": "Capability",
+          "type": "string"
+        },
+        "importance": {
+          "default": "required",
+          "enum": [
+            "required",
+            "preferred",
+            "optional"
+          ],
+          "title": "Importance",
+          "type": "string"
+        },
+        "min_score": {
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Min Score",
+          "type": "number"
+        },
+        "schema_version": {
+          "const": "p0.v1",
+          "default": "p0.v1",
+          "title": "Schema Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "capability",
+        "min_score"
+      ],
+      "title": "RequiredCapability",
+      "type": "object"
+    }
+  },
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "Structured pre-route task profile.\n\nA host model or deterministic profiler may produce this object, but it is\nnot itself a route decision.",
+  "properties": {
+    "ambiguity": {
+      "$ref": "#/$defs/AmbiguityProfile"
+    },
+    "confidence": {
+      "default": 0.0,
+      "maximum": 1.0,
+      "minimum": 0.0,
+      "title": "Confidence",
+      "type": "number"
+    },
+    "context_size": {
+      "default": "unknown",
+      "enum": [
+        "small",
+        "medium",
+        "large",
+        "unknown"
+      ],
+      "title": "Context Size",
+      "type": "string"
+    },
+    "cost_preference": {
+      "default": "balanced",
+      "enum": [
+        "cost_first",
+        "balanced",
+        "quality_first"
+      ],
+      "title": "Cost Preference",
+      "type": "string"
+    },
+    "difficulty": {
+      "default": "medium",
+      "enum": [
+        "trivial",
+        "easy",
+        "medium",
+        "high",
+        "expert"
+      ],
+      "title": "Difficulty",
+      "type": "string"
+    },
+    "forbidden_capabilities": {
+      "items": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "title": "Forbidden Capabilities",
+      "type": "array"
+    },
+    "latency_preference": {
+      "default": "normal",
+      "enum": [
+        "low",
+        "normal",
+        "high"
+      ],
+      "title": "Latency Preference",
+      "type": "string"
+    },
+    "privacy_level": {
+      "default": "private",
+      "enum": [
+        "private",
+        "internal",
+        "sensitive"
+      ],
+      "title": "Privacy Level",
+      "type": "string"
+    },
+    "profile_reason_codes": {
+      "items": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "title": "Profile Reason Codes",
+      "type": "array"
+    },
+    "required_capabilities": {
+      "items": {
+        "$ref": "#/$defs/RequiredCapability"
+      },
+      "title": "Required Capabilities",
+      "type": "array"
+    },
+    "requires_tools": {
+      "items": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "title": "Requires Tools",
+      "type": "array"
+    },
+    "requires_verifier_recipe_id": {
+      "default": true,
+      "title": "Requires Verifier Recipe Id",
+      "type": "boolean"
+    },
+    "risk_level": {
+      "default": "L1",
+      "enum": [
+        "L0",
+        "L1",
+        "L2",
+        "L3"
+      ],
+      "title": "Risk Level",
+      "type": "string"
+    },
+    "routebook_id": {
+      "minLength": 1,
+      "title": "Routebook Id",
+      "type": "string"
+    },
+    "routebook_version": {
+      "minLength": 1,
+      "title": "Routebook Version",
+      "type": "string"
+    },
+    "schema_version": {
+      "const": "p0.v1",
+      "default": "p0.v1",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "source": {
+      "default": "deterministic",
+      "enum": [
+        "deterministic",
+        "llm_assisted",
+        "host_supplied"
+      ],
+      "title": "Source",
+      "type": "string"
+    },
+    "success_criteria": {
+      "items": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "title": "Success Criteria",
+      "type": "array"
+    },
+    "task_family": {
+      "minLength": 1,
+      "title": "Task Family",
+      "type": "string"
+    },
+    "task_profile_id": {
+      "minLength": 1,
+      "title": "Task Profile Id",
+      "type": "string"
+    },
+    "task_type": {
+      "minLength": 1,
+      "title": "Task Type",
+      "type": "string"
+    },
+    "work_unit_id": {
+      "minLength": 1,
+      "title": "Work Unit Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "task_profile_id",
+    "work_unit_id",
+    "routebook_id",
+    "routebook_version",
+    "task_family",
+    "task_type"
+  ],
+  "title": "TaskProfile",
+  "type": "object"
+}

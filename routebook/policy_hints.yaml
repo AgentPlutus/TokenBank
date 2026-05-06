@@ -1,0 +1,16 @@
+policy_hints:
+  url_check:
+    - explicit_url_only
+    - no_recursive_workspace_scan
+  dedup:
+    - deterministic_local_processing
+    - private_capacity_only
+  topic_classification:
+    - control_plane_gateway_only
+    - verifier_required
+  claim_extraction:
+    - control_plane_gateway_only
+    - primary_gateway_fallback_available
+  webpage_extraction:
+    - explicit_url_only
+    - no_llm_generated_allowed_domains

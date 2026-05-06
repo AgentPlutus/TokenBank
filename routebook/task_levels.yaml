@@ -1,0 +1,13 @@
+task_levels:
+  L0:
+    requires_verifier_recipe_id: false
+    risk_level: low
+  L1:
+    requires_verifier_recipe_id: true
+    risk_level: low
+  L2:
+    requires_verifier_recipe_id: true
+    risk_level: medium
+  L3:
+    requires_verifier_recipe_id: true
+    risk_level: high

@@ -1,0 +1,32 @@
+forbidden_routes:
+  forbidden_backend_classes:
+    - account_pool
+    - oauth_proxy
+    - credential_broker
+    - external_seller
+  forbidden_backend_id_fragments:
+    - openai-compatible
+    - openai_proxy
+    - account_pool
+    - oauth_proxy
+  forbidden_path_fragments:
+    - /v1/chat/completions
+    - /v1/responses
+  forbidden_field_fragments:
+    - seller
+    - marketplace
+    - payment
+    - payout
+    - settlement
+    - yield
+    - account_pool
+    - oauth
+    - cookie
+    - api_key
+    - shell_command
+    - command
+    - argv
+    - chain_of_thought
+    - reasoning_trace
+  llm_generated_allowed_domains_denied: true
+  worker_direct_api_model_denied: true

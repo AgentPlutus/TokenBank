@@ -1,0 +1,66 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Python caches and virtual environments
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+env/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.pyre/
+
+# Test and coverage output
+.coverage
+.coverage.*
+coverage.xml
+htmlcov/
+
+# Build artifacts
+build/
+dist/
+*.egg-info/
+
+# Local TokenBank runtime state
+.tokenbank/
+*.db
+*.db-shm
+*.db-wal
+*.sqlite
+*.sqlite3
+
+# Local secrets and machine-specific config
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Logs and temporary files
+*.log
+*.tmp
+*.temp
+
+# Node/tool caches if frontend tooling is added later
+node_modules/
+.cache/
+
+# Internal planning, research, and agent handoff materials.
+# Keep these local; do not publish them in the public repository.
+AGENTS.md
+DR Prompt/
+DR Results/
+docs/research/
+handoffs/
+docs/ROUTEBOOK_V1_INTELLIGENT_ROUTING_PLAN.md
+DR0B.md
+TOKENBANK_COMMERCIAL_STRATEGY_V2_AI_PLAN_YIELD.md
+TOKENBANK_PHASE_0_PRIVATE_AGENT_CAPACITY_NETWORK_IMPLEMENTATION_PLAN_FINAL.md
+TOKENBANK_ROUND_0_TOKENBANK_DIRECTION_AND_PLAN_CALIBRATION.md
+TOKENBANK_SERIAL_DR_RESEARCH_PLAN.md
+TokenBank_项目说明_v3.md

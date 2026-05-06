@@ -1,0 +1,115 @@
+task_families:
+  simple_transform:
+    description: Formatting, cleanup, summarization, and small rewrites.
+  extraction:
+    description: Schema-bound extraction from explicit input.
+  browser:
+    description: Explicit URL fetch or webpage extraction.
+  research:
+    description: Multi-source lookup, synthesis, citation, and freshness checks.
+  code:
+    description: Reading, changing, testing, or reviewing code.
+  planning:
+    description: Product, architecture, task decomposition, and prioritization.
+  strong_reasoning:
+    description: Ambiguous, high-stakes, multi-step reasoning.
+  multimodal:
+    description: Image, audio, video, or document perception.
+  peer_delegation:
+    description: Work requiring capacity not owned by the local user.
+
+capability_tags:
+  strong_reasoning: {}
+  fast_reasoning: {}
+  code_understanding: {}
+  code_editing: {}
+  repo_context: {}
+  long_context: {}
+  structured_output: {}
+  tool_calling: {}
+  browser_fetch: {}
+  web_research: {}
+  citation_grounding: {}
+  data_extraction: {}
+  deterministic_local: {}
+  private_data_safe: {}
+  low_latency: {}
+  low_cost: {}
+  multimodal_vision: {}
+  math_reasoning: {}
+  safety_sensitive: {}
+  peer_capacity: {}
+
+quality_tiers:
+  weak_general:
+    intended_use: cheap profiling, drafts, and low-risk transforms.
+  standard:
+    intended_use: normal internal work.
+  strong:
+    intended_use: hard code, research, planning, and structured synthesis.
+  frontier:
+    intended_use: high-difficulty reasoning or high-cost-of-failure tasks.
+  specialist:
+    intended_use: verified narrow capability that may beat frontier on one task.
+
+difficulty_levels:
+  trivial:
+    default_min_tier: weak_general
+  easy:
+    default_min_tier: weak_general
+  medium:
+    default_min_tier: standard
+  high:
+    default_min_tier: strong
+  expert:
+    default_min_tier: frontier
+
+task_type_defaults:
+  url_check:
+    task_family: browser
+    difficulty: easy
+    required_capabilities:
+      - browser_fetch
+      - deterministic_local
+    success_criteria:
+      - reachable_status
+      - result_hash
+  dedup:
+    task_family: simple_transform
+    difficulty: easy
+    required_capabilities:
+      - deterministic_local
+      - data_extraction
+    success_criteria:
+      - duplicate_groups
+      - result_hash
+  webpage_extraction:
+    task_family: extraction
+    difficulty: medium
+    required_capabilities:
+      - browser_fetch
+      - data_extraction
+      - structured_output
+    success_criteria:
+      - extracted_fields
+      - result_hash
+  topic_classification:
+    task_family: extraction
+    difficulty: medium
+    required_capabilities:
+      - structured_output
+      - fast_reasoning
+    success_criteria:
+      - allowed_label
+      - result_hash
+  claim_extraction:
+    task_family: strong_reasoning
+    difficulty: high
+    required_capabilities:
+      - strong_reasoning
+      - structured_output
+      - data_extraction
+    success_criteria:
+      - factual_claims
+      - source_refs
+      - result_hash

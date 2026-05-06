@@ -1,0 +1,394 @@
+{
+  "$defs": {
+    "ComplexityEstimate": {
+      "additionalProperties": false,
+      "properties": {
+        "difficulty": {
+          "default": "medium",
+          "enum": [
+            "trivial",
+            "easy",
+            "medium",
+            "high",
+            "expert"
+          ],
+          "title": "Difficulty",
+          "type": "string"
+        },
+        "estimated_attempts": {
+          "default": 1.0,
+          "minimum": 1.0,
+          "title": "Estimated Attempts",
+          "type": "number"
+        },
+        "reason_codes": {
+          "items": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "title": "Reason Codes",
+          "type": "array"
+        },
+        "requires_long_context": {
+          "default": false,
+          "title": "Requires Long Context",
+          "type": "boolean"
+        },
+        "requires_strong_reasoning": {
+          "default": false,
+          "title": "Requires Strong Reasoning",
+          "type": "boolean"
+        },
+        "requires_tools": {
+          "default": false,
+          "title": "Requires Tools",
+          "type": "boolean"
+        },
+        "schema_version": {
+          "const": "p0.v1",
+          "default": "p0.v1",
+          "title": "Schema Version",
+          "type": "string"
+        }
+      },
+      "title": "ComplexityEstimate",
+      "type": "object"
+    },
+    "CostEstimate": {
+      "additionalProperties": false,
+      "properties": {
+        "confidence": {
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Confidence",
+          "type": "number"
+        },
+        "cost_profile_id": {
+          "minLength": 1,
+          "title": "Cost Profile Id",
+          "type": "string"
+        },
+        "cost_source": {
+          "default": "estimate",
+          "minLength": 1,
+          "title": "Cost Source",
+          "type": "string"
+        },
+        "expected_cost_micros": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Expected Cost Micros",
+          "type": "integer"
+        },
+        "max_cost_micros": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Max Cost Micros",
+          "type": "integer"
+        },
+        "min_cost_micros": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Min Cost Micros",
+          "type": "integer"
+        },
+        "schema_version": {
+          "const": "p0.v1",
+          "default": "p0.v1",
+          "title": "Schema Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "cost_profile_id",
+        "confidence"
+      ],
+      "title": "CostEstimate",
+      "type": "object"
+    },
+    "InputShape": {
+      "additionalProperties": false,
+      "properties": {
+        "explicit_refs_count": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Explicit Refs Count",
+          "type": "integer"
+        },
+        "explicit_urls_count": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Explicit Urls Count",
+          "type": "integer"
+        },
+        "file_refs_count": {
+          "default": 0,
+          "minimum": 0,
+          "title": "File Refs Count",
+          "type": "integer"
+        },
+        "inline_bytes": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Inline Bytes",
+          "type": "integer"
+        },
+        "inline_chars": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Inline Chars",
+          "type": "integer"
+        },
+        "json_depth": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Json Depth",
+          "type": "integer"
+        },
+        "list_items_count": {
+          "default": 0,
+          "minimum": 0,
+          "title": "List Items Count",
+          "type": "integer"
+        },
+        "schema_version": {
+          "const": "p0.v1",
+          "default": "p0.v1",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "workspace_scan_requested": {
+          "default": false,
+          "title": "Workspace Scan Requested",
+          "type": "boolean"
+        }
+      },
+      "title": "InputShape",
+      "type": "object"
+    },
+    "PrivacyScan": {
+      "additionalProperties": false,
+      "properties": {
+        "matched_signal_counts": {
+          "additionalProperties": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "propertyNames": {
+            "minLength": 1
+          },
+          "title": "Matched Signal Counts",
+          "type": "object"
+        },
+        "possible_secret_detected": {
+          "default": false,
+          "title": "Possible Secret Detected",
+          "type": "boolean"
+        },
+        "private_data_detected": {
+          "default": false,
+          "title": "Private Data Detected",
+          "type": "boolean"
+        },
+        "raw_secret_detected": {
+          "default": false,
+          "title": "Raw Secret Detected",
+          "type": "boolean"
+        },
+        "reason_codes": {
+          "items": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "title": "Reason Codes",
+          "type": "array"
+        },
+        "remote_eligible": {
+          "default": true,
+          "title": "Remote Eligible",
+          "type": "boolean"
+        },
+        "schema_version": {
+          "const": "p0.v1",
+          "default": "p0.v1",
+          "title": "Schema Version",
+          "type": "string"
+        }
+      },
+      "title": "PrivacyScan",
+      "type": "object"
+    },
+    "TokenEstimate": {
+      "additionalProperties": false,
+      "properties": {
+        "confidence": {
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Confidence",
+          "type": "number"
+        },
+        "estimated_input_tokens": {
+          "minimum": 0,
+          "title": "Estimated Input Tokens",
+          "type": "integer"
+        },
+        "estimated_output_tokens": {
+          "minimum": 0,
+          "title": "Estimated Output Tokens",
+          "type": "integer"
+        },
+        "estimated_total_tokens": {
+          "minimum": 0,
+          "title": "Estimated Total Tokens",
+          "type": "integer"
+        },
+        "method": {
+          "minLength": 1,
+          "title": "Method",
+          "type": "string"
+        },
+        "schema_version": {
+          "const": "p0.v1",
+          "default": "p0.v1",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "tokenizer_profile_id": {
+          "minLength": 1,
+          "title": "Tokenizer Profile Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "tokenizer_profile_id",
+        "estimated_input_tokens",
+        "estimated_output_tokens",
+        "estimated_total_tokens",
+        "confidence",
+        "method"
+      ],
+      "title": "TokenEstimate",
+      "type": "object"
+    }
+  },
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "Deterministic pre-route analysis artifact.\n\nThis object is advisory evidence for routing. It does not execute work and\ncannot lower the WorkUnit privacy or risk level.",
+  "properties": {
+    "complexity": {
+      "$ref": "#/$defs/ComplexityEstimate"
+    },
+    "confidence": {
+      "maximum": 1.0,
+      "minimum": 0.0,
+      "title": "Confidence",
+      "type": "number"
+    },
+    "cost_estimate": {
+      "$ref": "#/$defs/CostEstimate"
+    },
+    "effective_privacy_level": {
+      "enum": [
+        "private",
+        "internal",
+        "sensitive"
+      ],
+      "title": "Effective Privacy Level",
+      "type": "string"
+    },
+    "effective_task_level": {
+      "enum": [
+        "L0",
+        "L1",
+        "L2",
+        "L3"
+      ],
+      "title": "Effective Task Level",
+      "type": "string"
+    },
+    "input_shape": {
+      "$ref": "#/$defs/InputShape"
+    },
+    "preflight_decision": {
+      "default": "allow",
+      "enum": [
+        "allow",
+        "deny"
+      ],
+      "title": "Preflight Decision",
+      "type": "string"
+    },
+    "privacy_scan": {
+      "$ref": "#/$defs/PrivacyScan"
+    },
+    "reason_codes": {
+      "items": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "title": "Reason Codes",
+      "type": "array"
+    },
+    "routebook_id": {
+      "minLength": 1,
+      "title": "Routebook Id",
+      "type": "string"
+    },
+    "routebook_version": {
+      "minLength": 1,
+      "title": "Routebook Version",
+      "type": "string"
+    },
+    "schema_version": {
+      "const": "p0.v1",
+      "default": "p0.v1",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "source": {
+      "default": "deterministic_preflight",
+      "enum": [
+        "deterministic_preflight",
+        "lightweight_model",
+        "escalation_profiler"
+      ],
+      "title": "Source",
+      "type": "string"
+    },
+    "task_analysis_id": {
+      "minLength": 1,
+      "title": "Task Analysis Id",
+      "type": "string"
+    },
+    "task_type": {
+      "minLength": 1,
+      "title": "Task Type",
+      "type": "string"
+    },
+    "token_estimate": {
+      "$ref": "#/$defs/TokenEstimate"
+    },
+    "work_unit_id": {
+      "minLength": 1,
+      "title": "Work Unit Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "task_analysis_id",
+    "work_unit_id",
+    "routebook_id",
+    "routebook_version",
+    "task_type",
+    "input_shape",
+    "token_estimate",
+    "cost_estimate",
+    "privacy_scan",
+    "complexity",
+    "effective_task_level",
+    "effective_privacy_level",
+    "confidence"
+  ],
+  "title": "TaskAnalysisReport",
+  "type": "object"
+}

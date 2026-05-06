@@ -1,0 +1,185 @@
+{
+  "$defs": {
+    "ArtifactRef": {
+      "additionalProperties": false,
+      "properties": {
+        "artifact_hash": {
+          "minLength": 1,
+          "title": "Artifact Hash",
+          "type": "string"
+        },
+        "artifact_id": {
+          "minLength": 1,
+          "title": "Artifact Id",
+          "type": "string"
+        },
+        "media_type": {
+          "default": "application/octet-stream",
+          "minLength": 1,
+          "title": "Media Type",
+          "type": "string"
+        },
+        "metadata": {
+          "additionalProperties": true,
+          "title": "Metadata",
+          "type": "object"
+        },
+        "schema_version": {
+          "const": "p0.v1",
+          "default": "p0.v1",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "uri": {
+          "minLength": 1,
+          "title": "Uri",
+          "type": "string"
+        }
+      },
+      "required": [
+        "artifact_id",
+        "uri",
+        "artifact_hash"
+      ],
+      "title": "ArtifactRef",
+      "type": "object"
+    }
+  },
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "created_at": {
+      "format": "date-time",
+      "title": "Created At",
+      "type": "string"
+    },
+    "data_labels": {
+      "items": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "title": "Data Labels",
+      "type": "array"
+    },
+    "deadline_ms": {
+      "anyOf": [
+        {
+          "exclusiveMinimum": 0,
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Deadline Ms"
+    },
+    "inline_input": {
+      "additionalProperties": true,
+      "title": "Inline Input",
+      "type": "object"
+    },
+    "input_refs": {
+      "items": {
+        "$ref": "#/$defs/ArtifactRef"
+      },
+      "title": "Input Refs",
+      "type": "array"
+    },
+    "max_cost_micros": {
+      "anyOf": [
+        {
+          "minimum": 0,
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Max Cost Micros"
+    },
+    "output_schema_ref": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Output Schema Ref"
+    },
+    "privacy_level": {
+      "default": "private",
+      "enum": [
+        "private",
+        "internal",
+        "sensitive"
+      ],
+      "title": "Privacy Level",
+      "type": "string"
+    },
+    "run_id": {
+      "minLength": 1,
+      "title": "Run Id",
+      "type": "string"
+    },
+    "schema_version": {
+      "const": "p0.v1",
+      "default": "p0.v1",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "status": {
+      "default": "submitted",
+      "enum": [
+        "submitted",
+        "routing",
+        "queued",
+        "assigned",
+        "running",
+        "succeeded",
+        "failed",
+        "quarantined",
+        "cancelled"
+      ],
+      "title": "Status",
+      "type": "string"
+    },
+    "task_level": {
+      "enum": [
+        "L0",
+        "L1",
+        "L2",
+        "L3"
+      ],
+      "title": "Task Level",
+      "type": "string"
+    },
+    "task_type": {
+      "minLength": 1,
+      "title": "Task Type",
+      "type": "string"
+    },
+    "updated_at": {
+      "format": "date-time",
+      "title": "Updated At",
+      "type": "string"
+    },
+    "work_unit_id": {
+      "minLength": 1,
+      "title": "Work Unit Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "work_unit_id",
+    "run_id",
+    "task_type",
+    "task_level"
+  ],
+  "title": "WorkUnit",
+  "type": "object"
+}

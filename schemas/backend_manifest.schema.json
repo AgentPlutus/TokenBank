@@ -1,0 +1,206 @@
+{
+  "$defs": {
+    "BackendHealth": {
+      "additionalProperties": false,
+      "properties": {
+        "backend_id": {
+          "minLength": 1,
+          "title": "Backend Id",
+          "type": "string"
+        },
+        "checked_at": {
+          "format": "date-time",
+          "title": "Checked At",
+          "type": "string"
+        },
+        "latency_ms": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Latency Ms"
+        },
+        "message": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Message"
+        },
+        "schema_version": {
+          "const": "p0.v1",
+          "default": "p0.v1",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "status": {
+          "default": "unknown",
+          "enum": [
+            "healthy",
+            "degraded",
+            "unhealthy",
+            "unknown"
+          ],
+          "title": "Status",
+          "type": "string"
+        }
+      },
+      "required": [
+        "backend_id"
+      ],
+      "title": "BackendHealth",
+      "type": "object"
+    },
+    "CostModel": {
+      "additionalProperties": false,
+      "properties": {
+        "cost_source": {
+          "default": "policy_default",
+          "enum": [
+            "measured",
+            "estimated",
+            "policy_default",
+            "zero_internal_phase0",
+            "not_applicable"
+          ],
+          "title": "Cost Source",
+          "type": "string"
+        },
+        "estimated_cost_micros": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Estimated Cost Micros",
+          "type": "integer"
+        },
+        "schema_version": {
+          "const": "p0.v1",
+          "default": "p0.v1",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "unit": {
+          "default": "work_unit",
+          "minLength": 1,
+          "title": "Unit",
+          "type": "string"
+        }
+      },
+      "title": "CostModel",
+      "type": "object"
+    }
+  },
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "allowed_privacy_levels": {
+      "items": {
+        "enum": [
+          "private",
+          "internal",
+          "sensitive"
+        ],
+        "type": "string"
+      },
+      "title": "Allowed Privacy Levels",
+      "type": "array"
+    },
+    "backend_class": {
+      "enum": [
+        "local_tool",
+        "local_script",
+        "browser_fetch",
+        "local_model",
+        "api_model_gateway",
+        "primary_model_gateway"
+      ],
+      "title": "Backend Class",
+      "type": "string"
+    },
+    "backend_id": {
+      "minLength": 1,
+      "title": "Backend Id",
+      "type": "string"
+    },
+    "capacity_node_id": {
+      "minLength": 1,
+      "title": "Capacity Node Id",
+      "type": "string"
+    },
+    "cost_model": {
+      "$ref": "#/$defs/CostModel"
+    },
+    "display_name": {
+      "minLength": 1,
+      "title": "Display Name",
+      "type": "string"
+    },
+    "execution_location": {
+      "minLength": 1,
+      "title": "Execution Location",
+      "type": "string"
+    },
+    "health": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/BackendHealth"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "manifest_hash": {
+      "minLength": 1,
+      "title": "Manifest Hash",
+      "type": "string"
+    },
+    "policy_constraints": {
+      "additionalProperties": true,
+      "title": "Policy Constraints",
+      "type": "object"
+    },
+    "schema_version": {
+      "const": "p0.v1",
+      "default": "p0.v1",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "supported_task_types": {
+      "items": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "title": "Supported Task Types",
+      "type": "array"
+    },
+    "version": {
+      "minLength": 1,
+      "title": "Version",
+      "type": "string"
+    }
+  },
+  "required": [
+    "backend_id",
+    "backend_class",
+    "capacity_node_id",
+    "display_name",
+    "version",
+    "supported_task_types",
+    "execution_location",
+    "manifest_hash"
+  ],
+  "title": "BackendManifest",
+  "type": "object"
+}

@@ -1,0 +1,123 @@
+backend_registry:
+  backends:
+    - backend_id: backend:url_check:v0
+      backend_class: local_tool
+      capacity_node_id: capnode:tool:url_check:v0
+      display_name: URL Check Local Tool
+      version: v0
+      supported_task_types:
+        - url_check
+      allowed_privacy_levels:
+        - private
+      execution_location: local_machine
+      manifest_hash: backend_url_check_v0
+      cost_model:
+        actual_cost_micros: 0
+        estimated_cost_micros: 0
+    - backend_id: backend:browser_fetch:v0
+      backend_class: browser_fetch
+      capacity_node_id: capnode:tool:browser_fetch:v0
+      display_name: Browser Fetch Local Tool
+      version: v0
+      supported_task_types:
+        - url_check
+      allowed_privacy_levels:
+        - private
+      execution_location: local_machine
+      manifest_hash: backend_browser_fetch_v0
+      cost_model:
+        actual_cost_micros: 0
+        estimated_cost_micros: 0
+    - backend_id: backend:dedup:local_script:v0
+      backend_class: local_script
+      capacity_node_id: capnode:script:dedup:v0
+      display_name: Dedup Local Script
+      version: v0
+      supported_task_types:
+        - dedup
+      allowed_privacy_levels:
+        - private
+      execution_location: local_machine
+      manifest_hash: backend_dedup_local_script_v0
+      cost_model:
+        actual_cost_micros: 0
+        estimated_cost_micros: 0
+    - backend_id: backend:webpage_extraction:browser_fetch:v0
+      backend_class: browser_fetch
+      capacity_node_id: capnode:browser_fetch:webpage_extraction:v0
+      display_name: Webpage Extraction Browser Fetch
+      version: v0
+      supported_task_types:
+        - webpage_extraction
+      allowed_privacy_levels:
+        - private
+      execution_location: local_machine
+      manifest_hash: backend_webpage_extraction_browser_fetch_v0
+      cost_model:
+        actual_cost_micros: 0
+        estimated_cost_micros: 0
+    - backend_id: backend:api_model_gateway:l1_structured
+      backend_class: api_model_gateway
+      capacity_node_id: capnode:api_gateway:l1_structured
+      display_name: API Model Gateway L1 Structured
+      version: v0
+      supported_task_types:
+        - structured_summary
+      allowed_privacy_levels:
+        - private
+      execution_location: mac_control_plane
+      manifest_hash: backend_api_gateway_l1
+      cost_model:
+        estimated_cost_micros: 1000
+    - backend_id: backend:topic_classification:api_gateway:v0
+      backend_class: api_model_gateway
+      capacity_node_id: capnode:api_gateway:topic_classification:v0
+      display_name: Topic Classification API Gateway
+      version: v0
+      supported_task_types:
+        - topic_classification
+      allowed_privacy_levels:
+        - private
+      execution_location: mac_control_plane
+      manifest_hash: backend_topic_classification_api_gateway_v0
+      cost_model:
+        estimated_cost_micros: 1000
+    - backend_id: backend:claim_extraction:api_gateway:v0
+      backend_class: api_model_gateway
+      capacity_node_id: capnode:api_gateway:claim_extraction:v0
+      display_name: Claim Extraction API Gateway
+      version: v0
+      supported_task_types:
+        - claim_extraction
+      allowed_privacy_levels:
+        - private
+      execution_location: mac_control_plane
+      manifest_hash: backend_claim_extraction_api_gateway_v0
+      cost_model:
+        estimated_cost_micros: 1000
+    - backend_id: backend:primary_model_gateway:v0
+      backend_class: primary_model_gateway
+      capacity_node_id: capnode:primary_gateway:v0
+      display_name: Primary Model Gateway
+      version: v0
+      supported_task_types:
+        - structured_summary
+      allowed_privacy_levels:
+        - private
+      execution_location: mac_control_plane
+      manifest_hash: backend_primary_gateway_v0
+      cost_model:
+        estimated_cost_micros: 1000
+    - backend_id: backend:claim_extraction:primary_gateway:v0
+      backend_class: primary_model_gateway
+      capacity_node_id: capnode:primary_gateway:claim_extraction:v0
+      display_name: Claim Extraction Primary Gateway
+      version: v0
+      supported_task_types:
+        - claim_extraction
+      allowed_privacy_levels:
+        - private
+      execution_location: mac_control_plane
+      manifest_hash: backend_claim_extraction_primary_gateway_v0
+      cost_model:
+        estimated_cost_micros: 1000

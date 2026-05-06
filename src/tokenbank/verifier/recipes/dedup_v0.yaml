@@ -1,0 +1,24 @@
+verifier_recipe:
+  verifier_recipe_id: dedup_v0
+  task_type: dedup
+  output_schema:
+    type: object
+    required:
+      - unique_items
+      - duplicate_count
+    properties:
+      unique_items:
+        type: array
+      duplicate_count:
+        type: integer
+      overmerge_detected:
+        type: boolean
+  recommendations:
+    hash_mismatch: quarantine
+    output_hash_missing: reject
+    schema_invalid: reject
+    secret_detected: quarantine
+    exact: accept
+    overmerge: accept_with_warning
+    default_failure: reject
+  sampled_audit_rate_bps: 0

@@ -1,0 +1,5 @@
+{
+  "url": "https://example.com/private-capacity-demo",
+  "html": "<html><head><title>Private Capacity Demo</title></head><body><main>TokenBank treats fetched webpage content as untrusted data.</main></body></html>",
+  "title": "Private Capacity Demo"
+}

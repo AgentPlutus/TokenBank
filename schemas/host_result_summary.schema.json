@@ -1,0 +1,386 @@
+{
+  "$defs": {
+    "ArtifactRef": {
+      "additionalProperties": false,
+      "properties": {
+        "artifact_hash": {
+          "minLength": 1,
+          "title": "Artifact Hash",
+          "type": "string"
+        },
+        "artifact_id": {
+          "minLength": 1,
+          "title": "Artifact Id",
+          "type": "string"
+        },
+        "media_type": {
+          "default": "application/octet-stream",
+          "minLength": 1,
+          "title": "Media Type",
+          "type": "string"
+        },
+        "metadata": {
+          "additionalProperties": true,
+          "title": "Metadata",
+          "type": "object"
+        },
+        "schema_version": {
+          "const": "p0.v1",
+          "default": "p0.v1",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "uri": {
+          "minLength": 1,
+          "title": "Uri",
+          "type": "string"
+        }
+      },
+      "required": [
+        "artifact_id",
+        "uri",
+        "artifact_hash"
+      ],
+      "title": "ArtifactRef",
+      "type": "object"
+    },
+    "HostCostQualitySummary": {
+      "additionalProperties": false,
+      "properties": {
+        "actual_cost_micros": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Actual Cost Micros",
+          "type": "integer"
+        },
+        "audit_status": {
+          "default": "unknown",
+          "enum": [
+            "clean",
+            "warning",
+            "quarantined",
+            "unknown"
+          ],
+          "title": "Audit Status",
+          "type": "string"
+        },
+        "baseline_cost_micros": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Baseline Cost Micros"
+        },
+        "baseline_mode": {
+          "default": "none",
+          "minLength": 1,
+          "title": "Baseline Mode",
+          "type": "string"
+        },
+        "caveats": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Caveats",
+          "type": "array"
+        },
+        "cost_confidence": {
+          "default": "not_applicable",
+          "enum": [
+            "low",
+            "medium",
+            "high",
+            "not_applicable"
+          ],
+          "title": "Cost Confidence",
+          "type": "string"
+        },
+        "cost_source": {
+          "default": "not_applicable",
+          "enum": [
+            "measured",
+            "estimated",
+            "policy_default",
+            "zero_internal_phase0",
+            "not_applicable"
+          ],
+          "title": "Cost Source",
+          "type": "string"
+        },
+        "estimated_cost_micros": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Estimated Cost Micros",
+          "type": "integer"
+        },
+        "local_zero_cost_caveat": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Local Zero Cost Caveat"
+        },
+        "primary_model_fallback_cost_micros": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Primary Model Fallback Cost Micros",
+          "type": "integer"
+        },
+        "primary_model_fallback_used": {
+          "default": false,
+          "title": "Primary Model Fallback Used",
+          "type": "boolean"
+        },
+        "quality_status": {
+          "default": "unknown",
+          "enum": [
+            "passed",
+            "failed",
+            "needs_review",
+            "unknown"
+          ],
+          "title": "Quality Status",
+          "type": "string"
+        },
+        "saving_ratio_bps": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Cost saving ratio in basis points; 10000 means 100 percent.",
+          "title": "Saving Ratio Bps"
+        },
+        "schema_version": {
+          "const": "p0.v1",
+          "default": "p0.v1",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "verifier_passed": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Verifier Passed"
+        }
+      },
+      "title": "HostCostQualitySummary",
+      "type": "object"
+    }
+  },
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "artifact_refs": {
+      "items": {
+        "$ref": "#/$defs/ArtifactRef"
+      },
+      "title": "Artifact Refs",
+      "type": "array"
+    },
+    "backend_class": {
+      "enum": [
+        "local_tool",
+        "local_script",
+        "browser_fetch",
+        "local_model",
+        "api_model_gateway",
+        "primary_model_gateway"
+      ],
+      "title": "Backend Class",
+      "type": "string"
+    },
+    "backend_id": {
+      "minLength": 1,
+      "title": "Backend Id",
+      "type": "string"
+    },
+    "capacity_node_id": {
+      "minLength": 1,
+      "title": "Capacity Node Id",
+      "type": "string"
+    },
+    "caveats": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Caveats",
+      "type": "array"
+    },
+    "cost_summary": {
+      "$ref": "#/$defs/HostCostQualitySummary"
+    },
+    "duration_ms": {
+      "anyOf": [
+        {
+          "minimum": 0,
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Duration Ms"
+    },
+    "fallback_used": {
+      "default": false,
+      "title": "Fallback Used",
+      "type": "boolean"
+    },
+    "generated_at": {
+      "format": "date-time",
+      "title": "Generated At",
+      "type": "string"
+    },
+    "quarantine_status": {
+      "default": "none",
+      "enum": [
+        "none",
+        "quarantined",
+        "released"
+      ],
+      "title": "Quarantine Status",
+      "type": "string"
+    },
+    "result_summary": {
+      "title": "Result Summary",
+      "type": "string"
+    },
+    "retry_count": {
+      "default": 0,
+      "minimum": 0,
+      "title": "Retry Count",
+      "type": "integer"
+    },
+    "run_id": {
+      "minLength": 1,
+      "title": "Run Id",
+      "type": "string"
+    },
+    "schema_version": {
+      "const": "p0.v1",
+      "default": "p0.v1",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "status": {
+      "enum": [
+        "succeeded",
+        "failed",
+        "running",
+        "quarantined",
+        "cancelled"
+      ],
+      "title": "Status",
+      "type": "string"
+    },
+    "task_level": {
+      "enum": [
+        "L0",
+        "L1",
+        "L2",
+        "L3"
+      ],
+      "title": "Task Level",
+      "type": "string"
+    },
+    "task_type": {
+      "minLength": 1,
+      "title": "Task Type",
+      "type": "string"
+    },
+    "trace_ref": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Trace Ref"
+    },
+    "verifier_recommendation": {
+      "enum": [
+        "accept",
+        "accept_with_warning",
+        "retry",
+        "fallback",
+        "reject",
+        "quarantine",
+        "escalate",
+        "review"
+      ],
+      "title": "Verifier Recommendation",
+      "type": "string"
+    },
+    "verifier_status": {
+      "enum": [
+        "passed",
+        "failed",
+        "needs_review",
+        "skipped"
+      ],
+      "title": "Verifier Status",
+      "type": "string"
+    },
+    "warnings": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Warnings",
+      "type": "array"
+    },
+    "work_unit_id": {
+      "minLength": 1,
+      "title": "Work Unit Id",
+      "type": "string"
+    },
+    "worker_id": {
+      "minLength": 1,
+      "title": "Worker Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "work_unit_id",
+    "run_id",
+    "status",
+    "task_type",
+    "task_level",
+    "verifier_status",
+    "verifier_recommendation",
+    "result_summary",
+    "backend_class",
+    "backend_id",
+    "worker_id",
+    "capacity_node_id",
+    "cost_summary"
+  ],
+  "title": "HostResultSummary",
+  "type": "object"
+}

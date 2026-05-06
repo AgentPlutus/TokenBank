@@ -1,0 +1,43 @@
+runtime:
+  runtime_mode: demo
+  default_policy_decision: deny
+  needs_review_is_deny: true
+routebook:
+  task_types:
+    - url_check
+    - structured_summary
+  backend_classes:
+    - local_tool
+    - browser_fetch
+    - api_model_gateway
+    - primary_model_gateway
+  candidate_rules:
+    - rule_id: url_check_local_tool
+      task_type: url_check
+      task_level: L1
+      backend_class: local_tool
+      backend_id: backend:url_check:v0
+      verifier_recipe_id: url_check_v0
+    - rule_id: url_check_browser_fetch
+      task_type: url_check
+      task_level: L1
+      backend_class: browser_fetch
+      backend_id: backend:browser_fetch:v0
+      verifier_recipe_id: url_check_v0
+    - rule_id: structured_summary_gateway
+      task_type: structured_summary
+      task_level: L2
+      backend_class: api_model_gateway
+      backend_id: backend:api_model_gateway:l1_structured
+      verifier_recipe_id: structured_summary_v0
+    - rule_id: structured_summary_primary_gateway
+      task_type: structured_summary
+      task_level: L2
+      backend_class: primary_model_gateway
+      backend_id: backend:primary_model_gateway:v0
+      verifier_recipe_id: structured_summary_v0
+verifier_recipes:
+  - verifier_recipe_id: url_check_v0
+    task_type: url_check
+  - verifier_recipe_id: structured_summary_v0
+    task_type: structured_summary

@@ -1,0 +1,5 @@
+{
+  "text": "TokenBank routes private capacity through Core and verifies results before acceptance.",
+  "source_id": "src_claim_fixture",
+  "entity": "TokenBank"
+}

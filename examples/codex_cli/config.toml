@@ -1,0 +1,6 @@
+[mcp_servers.tokenbank]
+command = "uv"
+args = ["run", "tokenbank", "mcp", "serve"]
+
+# TokenBank Phase 0 is a Private Agent Capacity Network MCP stub.
+# Do not configure OAuth tokens, cookies, API keys, or account credentials here.

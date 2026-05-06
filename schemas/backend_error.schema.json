@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "error_code": {
+      "minLength": 1,
+      "title": "Error Code",
+      "type": "string"
+    },
+    "error_message": {
+      "minLength": 1,
+      "title": "Error Message",
+      "type": "string"
+    },
+    "fallbackable": {
+      "default": false,
+      "title": "Fallbackable",
+      "type": "boolean"
+    },
+    "occurred_at": {
+      "format": "date-time",
+      "title": "Occurred At",
+      "type": "string"
+    },
+    "redacted_details": {
+      "additionalProperties": true,
+      "title": "Redacted Details",
+      "type": "object"
+    },
+    "retryable": {
+      "default": false,
+      "title": "Retryable",
+      "type": "boolean"
+    },
+    "schema_version": {
+      "const": "p0.v1",
+      "default": "p0.v1",
+      "title": "Schema Version",
+      "type": "string"
+    }
+  },
+  "required": [
+    "error_code",
+    "error_message"
+  ],
+  "title": "BackendError",
+  "type": "object"
+}

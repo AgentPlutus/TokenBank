@@ -1,0 +1,17 @@
+verifier_mapping:
+  url_check: url_check_v0
+  dedup: dedup_v0
+  topic_classification: topic_classification_v0
+  claim_extraction: claim_extraction_v0
+  webpage_extraction: webpage_extraction_v0
+verifier_recipes:
+  - verifier_recipe_id: url_check_v0
+    task_type: url_check
+  - verifier_recipe_id: dedup_v0
+    task_type: dedup
+  - verifier_recipe_id: topic_classification_v0
+    task_type: topic_classification
+  - verifier_recipe_id: claim_extraction_v0
+    task_type: claim_extraction
+  - verifier_recipe_id: webpage_extraction_v0
+    task_type: webpage_extraction

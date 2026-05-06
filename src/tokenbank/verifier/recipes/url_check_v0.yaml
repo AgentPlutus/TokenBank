@@ -1,0 +1,31 @@
+verifier_recipe:
+  verifier_recipe_id: url_check_v0
+  task_type: url_check
+  output_schema:
+    type: object
+    required:
+      - ok
+    properties:
+      ok:
+        type: boolean
+      status_code:
+        type: integer
+      final_url:
+        type: string
+      timed_out:
+        type: boolean
+      private_ip_denied:
+        type: boolean
+      redirect_denied:
+        type: boolean
+  recommendations:
+    hash_mismatch: quarantine
+    output_hash_missing: reject
+    schema_invalid: retry
+    secret_detected: quarantine
+    timeout: retry
+    private_ip_or_redirect: quarantine
+    http_2xx: accept
+    http_4xx: accept_with_warning
+    default_failure: reject
+  sampled_audit_rate_bps: 0

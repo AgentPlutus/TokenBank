@@ -1,0 +1,18 @@
+pricing:
+  currency: USD
+  backend_prices:
+    - backend_id: backend:api_model_gateway:l1_structured
+      input_unit_micros: 10
+      output_unit_micros: 30
+    - backend_id: backend:topic_classification:api_gateway:v0
+      input_unit_micros: 10
+      output_unit_micros: 30
+    - backend_id: backend:claim_extraction:api_gateway:v0
+      input_unit_micros: 10
+      output_unit_micros: 30
+    - backend_id: backend:primary_model_gateway:v0
+      input_unit_micros: 10
+      output_unit_micros: 30
+    - backend_id: backend:claim_extraction:primary_gateway:v0
+      input_unit_micros: 10
+      output_unit_micros: 30

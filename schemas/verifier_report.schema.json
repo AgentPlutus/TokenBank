@@ -1,0 +1,151 @@
+{
+  "$defs": {
+    "VerifierCheckResult": {
+      "additionalProperties": false,
+      "properties": {
+        "message": {
+          "default": "",
+          "title": "Message",
+          "type": "string"
+        },
+        "metadata": {
+          "additionalProperties": true,
+          "title": "Metadata",
+          "type": "object"
+        },
+        "name": {
+          "minLength": 1,
+          "title": "Name",
+          "type": "string"
+        },
+        "observed_hash": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Observed Hash"
+        },
+        "schema_version": {
+          "const": "p0.v1",
+          "default": "p0.v1",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "passed",
+            "failed",
+            "needs_review",
+            "skipped"
+          ],
+          "title": "Status",
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "status"
+      ],
+      "title": "VerifierCheckResult",
+      "type": "object"
+    }
+  },
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "checks": {
+      "items": {
+        "$ref": "#/$defs/VerifierCheckResult"
+      },
+      "title": "Checks",
+      "type": "array"
+    },
+    "created_at": {
+      "format": "date-time",
+      "title": "Created At",
+      "type": "string"
+    },
+    "metadata": {
+      "additionalProperties": true,
+      "title": "Metadata",
+      "type": "object"
+    },
+    "output_hash": {
+      "minLength": 1,
+      "title": "Output Hash",
+      "type": "string"
+    },
+    "recommendation": {
+      "enum": [
+        "accept",
+        "accept_with_warning",
+        "retry",
+        "fallback",
+        "reject",
+        "quarantine",
+        "escalate",
+        "review"
+      ],
+      "title": "Recommendation",
+      "type": "string"
+    },
+    "result_envelope_id": {
+      "minLength": 1,
+      "title": "Result Envelope Id",
+      "type": "string"
+    },
+    "result_hash": {
+      "minLength": 1,
+      "title": "Result Hash",
+      "type": "string"
+    },
+    "schema_version": {
+      "const": "p0.v1",
+      "default": "p0.v1",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "status": {
+      "enum": [
+        "passed",
+        "failed",
+        "needs_review",
+        "skipped"
+      ],
+      "title": "Status",
+      "type": "string"
+    },
+    "verifier_recipe_id": {
+      "minLength": 1,
+      "title": "Verifier Recipe Id",
+      "type": "string"
+    },
+    "verifier_report_id": {
+      "minLength": 1,
+      "title": "Verifier Report Id",
+      "type": "string"
+    },
+    "work_unit_id": {
+      "minLength": 1,
+      "title": "Work Unit Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "verifier_report_id",
+    "work_unit_id",
+    "result_envelope_id",
+    "verifier_recipe_id",
+    "status",
+    "recommendation",
+    "output_hash",
+    "result_hash"
+  ],
+  "title": "VerifierReport",
+  "type": "object"
+}

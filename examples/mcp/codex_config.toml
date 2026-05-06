@@ -1,0 +1,3 @@
+[mcp_servers.tokenbank]
+command = "uv"
+args = ["run", "tokenbank", "mcp", "serve"]

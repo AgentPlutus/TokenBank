@@ -1,0 +1,22 @@
+worker:
+  worker_id: wrk_win_01
+  control_plane_url: http://127.0.0.1:8765
+  worker_token: tbk_w_demo_worker_redacted
+  capabilities:
+    - url_check
+  backend_ids:
+    - backend:url_check:v0
+  backend_classes:
+    - local_tool
+  allowed_task_types:
+    - url_check
+  allowed_data_labels:
+    - public_url
+  allowed_privacy_levels:
+    - private
+  sandbox_root: .tokenbank/worker/sandbox
+  spool_dir: .tokenbank/worker/spool
+  heartbeat_interval_seconds: 10
+  poll_interval_seconds: 2
+  progress_interval_seconds: 15
+  request_timeout_seconds: 10

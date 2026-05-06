@@ -1,0 +1,12 @@
+{
+  "text": "TokenBank routes private capacity through a control-plane gateway.",
+  "source_id": "src_private_capacity_demo_claim_1",
+  "entity": "TokenBank",
+  "allowed_claim_types": [
+    "factual",
+    "metric",
+    "policy",
+    "product",
+    "other"
+  ]
+}

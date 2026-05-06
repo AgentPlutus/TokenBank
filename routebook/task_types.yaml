@@ -1,0 +1,16 @@
+task_types:
+  - task_type: url_check
+    default_task_level: L1
+    description: Validate that a submitted URL can be routed to private capacity.
+  - task_type: dedup
+    default_task_level: L1
+    description: Detect duplicate or near-duplicate input records.
+  - task_type: topic_classification
+    default_task_level: L1
+    description: Classify content into configured topic labels.
+  - task_type: claim_extraction
+    default_task_level: L2
+    description: Extract factual claims from provided content.
+  - task_type: webpage_extraction
+    default_task_level: L1
+    description: Extract structured data from an explicitly provided webpage URL.

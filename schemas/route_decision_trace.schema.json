@@ -1,0 +1,268 @@
+{
+  "$defs": {
+    "CandidateScore": {
+      "additionalProperties": false,
+      "properties": {
+        "capability_fit": {
+          "default": 0.0,
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Capability Fit",
+          "type": "number"
+        },
+        "cost_fit": {
+          "default": 0.0,
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Cost Fit",
+          "type": "number"
+        },
+        "latency_fit": {
+          "default": 0.0,
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Latency Fit",
+          "type": "number"
+        },
+        "policy_fit": {
+          "default": 1.0,
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Policy Fit",
+          "type": "number"
+        },
+        "quality_fit": {
+          "default": 0.0,
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Quality Fit",
+          "type": "number"
+        },
+        "schema_version": {
+          "const": "p0.v1",
+          "default": "p0.v1",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "total": {
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Total",
+          "type": "number"
+        },
+        "trust_fit": {
+          "default": 1.0,
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Trust Fit",
+          "type": "number"
+        },
+        "uncertainty_penalty": {
+          "default": 0.0,
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Uncertainty Penalty",
+          "type": "number"
+        }
+      },
+      "required": [
+        "total"
+      ],
+      "title": "CandidateScore",
+      "type": "object"
+    },
+    "CandidateScoreTrace": {
+      "additionalProperties": false,
+      "properties": {
+        "candidate_id": {
+          "minLength": 1,
+          "title": "Candidate Id",
+          "type": "string"
+        },
+        "hard_filter_results": {
+          "additionalProperties": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "propertyNames": {
+            "minLength": 1
+          },
+          "title": "Hard Filter Results",
+          "type": "object"
+        },
+        "reason_codes": {
+          "items": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "title": "Reason Codes",
+          "type": "array"
+        },
+        "schema_version": {
+          "const": "p0.v1",
+          "default": "p0.v1",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "score": {
+          "$ref": "#/$defs/CandidateScore"
+        }
+      },
+      "required": [
+        "candidate_id",
+        "score"
+      ],
+      "title": "CandidateScoreTrace",
+      "type": "object"
+    },
+    "RejectedCandidateTrace": {
+      "additionalProperties": false,
+      "properties": {
+        "candidate_id": {
+          "minLength": 1,
+          "title": "Candidate Id",
+          "type": "string"
+        },
+        "reason_codes": {
+          "items": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "title": "Reason Codes",
+          "type": "array"
+        },
+        "schema_version": {
+          "const": "p0.v1",
+          "default": "p0.v1",
+          "title": "Schema Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "candidate_id"
+      ],
+      "title": "RejectedCandidateTrace",
+      "type": "object"
+    }
+  },
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "Host-safe explanation for a RoutePlan selection.",
+  "properties": {
+    "candidate_scores": {
+      "items": {
+        "$ref": "#/$defs/CandidateScoreTrace"
+      },
+      "title": "Candidate Scores",
+      "type": "array"
+    },
+    "capacity_snapshot_hash": {
+      "minLength": 1,
+      "title": "Capacity Snapshot Hash",
+      "type": "string"
+    },
+    "estimate_summary": {
+      "additionalProperties": true,
+      "propertyNames": {
+        "minLength": 1
+      },
+      "title": "Estimate Summary",
+      "type": "object"
+    },
+    "reason_codes": {
+      "items": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "title": "Reason Codes",
+      "type": "array"
+    },
+    "rejected_candidates": {
+      "items": {
+        "$ref": "#/$defs/RejectedCandidateTrace"
+      },
+      "title": "Rejected Candidates",
+      "type": "array"
+    },
+    "route_decision_id": {
+      "minLength": 1,
+      "title": "Route Decision Id",
+      "type": "string"
+    },
+    "route_plan_id": {
+      "minLength": 1,
+      "title": "Route Plan Id",
+      "type": "string"
+    },
+    "routebook_id": {
+      "minLength": 1,
+      "title": "Routebook Id",
+      "type": "string"
+    },
+    "routebook_version": {
+      "minLength": 1,
+      "title": "Routebook Version",
+      "type": "string"
+    },
+    "rule_ids": {
+      "items": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "title": "Rule Ids",
+      "type": "array"
+    },
+    "schema_version": {
+      "const": "p0.v1",
+      "default": "p0.v1",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "selected_candidate_id": {
+      "minLength": 1,
+      "title": "Selected Candidate Id",
+      "type": "string"
+    },
+    "task_analysis_hash": {
+      "anyOf": [
+        {
+          "minLength": 1,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Task Analysis Hash"
+    },
+    "task_profile_hash": {
+      "minLength": 1,
+      "title": "Task Profile Hash",
+      "type": "string"
+    },
+    "user_summary": {
+      "minLength": 1,
+      "title": "User Summary",
+      "type": "string"
+    },
+    "work_unit_id": {
+      "minLength": 1,
+      "title": "Work Unit Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "route_decision_id",
+    "route_plan_id",
+    "work_unit_id",
+    "routebook_id",
+    "routebook_version",
+    "task_profile_hash",
+    "capacity_snapshot_hash",
+    "selected_candidate_id",
+    "user_summary"
+  ],
+  "title": "RouteDecisionTrace",
+  "type": "object"
+}

@@ -1,0 +1,9 @@
+provider_policy:
+  allowed_provider_ids:
+    - control_plane_api_model
+    - control_plane_primary_model
+  worker_direct_api_model: deny
+  credential_passthrough: deny
+  notes:
+    - API model credentials stay on the Mac mini control plane.
+

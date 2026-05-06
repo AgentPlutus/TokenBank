@@ -1,0 +1,22 @@
+data_policy:
+  default_privacy_level: private
+  allowed_privacy_levels:
+    - private
+    - internal
+  allowed_data_labels:
+    - public_url
+    - internal_text
+    - synthetic_fixture
+  forbidden_extension_keys:
+    - seller
+    - marketplace
+    - payment
+    - payout
+    - settlement
+    - yield
+    - apr
+    - credit_trading
+    - account_pool
+    - oauth_proxy
+    - credential_broker
+

@@ -1,0 +1,109 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "assigned_at": {
+      "format": "date-time",
+      "title": "Assigned At",
+      "type": "string"
+    },
+    "assignment_id": {
+      "minLength": 1,
+      "title": "Assignment Id",
+      "type": "string"
+    },
+    "attempt_id": {
+      "minLength": 1,
+      "title": "Attempt Id",
+      "type": "string"
+    },
+    "backend_id": {
+      "minLength": 1,
+      "title": "Backend Id",
+      "type": "string"
+    },
+    "capacity_node_id": {
+      "minLength": 1,
+      "title": "Capacity Node Id",
+      "type": "string"
+    },
+    "effective_constraints": {
+      "additionalProperties": true,
+      "title": "Effective Constraints",
+      "type": "object"
+    },
+    "lease_expires_at": {
+      "anyOf": [
+        {
+          "format": "date-time",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Lease Expires At"
+    },
+    "lease_token_hash": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Lease Token Hash"
+    },
+    "lease_version": {
+      "default": 0,
+      "minimum": 0,
+      "title": "Lease Version",
+      "type": "integer"
+    },
+    "schema_version": {
+      "const": "p0.v1",
+      "default": "p0.v1",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "status": {
+      "default": "created",
+      "enum": [
+        "created",
+        "accepted",
+        "running",
+        "completed",
+        "rejected",
+        "quarantined",
+        "expired",
+        "cancelled",
+        "failed"
+      ],
+      "title": "Status",
+      "type": "string"
+    },
+    "work_unit_id": {
+      "minLength": 1,
+      "title": "Work Unit Id",
+      "type": "string"
+    },
+    "worker_id": {
+      "minLength": 1,
+      "title": "Worker Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "assignment_id",
+    "attempt_id",
+    "work_unit_id",
+    "worker_id",
+    "capacity_node_id",
+    "backend_id"
+  ],
+  "title": "Assignment",
+  "type": "object"
+}

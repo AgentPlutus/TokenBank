@@ -1,0 +1,27 @@
+verifier_recipe:
+  verifier_recipe_id: topic_classification_v0
+  task_type: topic_classification
+  output_schema:
+    type: object
+    required:
+      - label
+      - confidence
+    properties:
+      label:
+        type: string
+      confidence:
+        type: number
+      allowed_labels:
+        type: array
+        items:
+          type: string
+  recommendations:
+    hash_mismatch: quarantine
+    output_hash_missing: reject
+    schema_invalid: retry
+    secret_detected: quarantine
+    label_not_enum: retry
+    low_confidence: accept_with_warning
+    valid_label: accept
+    default_failure: reject
+  sampled_audit_rate_bps: 0

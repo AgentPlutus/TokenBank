@@ -1,0 +1,376 @@
+{
+  "$defs": {
+    "CapacityCapability": {
+      "additionalProperties": false,
+      "properties": {
+        "evidence": {
+          "default": "declared",
+          "enum": [
+            "declared",
+            "tested",
+            "verified",
+            "attested"
+          ],
+          "title": "Evidence",
+          "type": "string"
+        },
+        "schema_version": {
+          "const": "p0.v1",
+          "default": "p0.v1",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "score": {
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Score",
+          "type": "number"
+        }
+      },
+      "required": [
+        "score"
+      ],
+      "title": "CapacityCapability",
+      "type": "object"
+    },
+    "CapacityCostProfile": {
+      "additionalProperties": false,
+      "properties": {
+        "cost_tier": {
+          "default": "unknown",
+          "enum": [
+            "free",
+            "low",
+            "medium",
+            "high",
+            "unknown"
+          ],
+          "title": "Cost Tier",
+          "type": "string"
+        },
+        "estimated_cost_micros": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Estimated Cost Micros",
+          "type": "integer"
+        },
+        "schema_version": {
+          "const": "p0.v1",
+          "default": "p0.v1",
+          "title": "Schema Version",
+          "type": "string"
+        }
+      },
+      "title": "CapacityCostProfile",
+      "type": "object"
+    },
+    "CapacityLatencyProfile": {
+      "additionalProperties": false,
+      "properties": {
+        "p50_ms": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "P50 Ms"
+        },
+        "p95_ms": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "P95 Ms"
+        },
+        "schema_version": {
+          "const": "p0.v1",
+          "default": "p0.v1",
+          "title": "Schema Version",
+          "type": "string"
+        }
+      },
+      "title": "CapacityLatencyProfile",
+      "type": "object"
+    },
+    "CapacityQualityMemory": {
+      "additionalProperties": false,
+      "properties": {
+        "accepted_result_rate": {
+          "anyOf": [
+            {
+              "maximum": 1.0,
+              "minimum": 0.0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Accepted Result Rate"
+        },
+        "sample_size": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Sample Size",
+          "type": "integer"
+        },
+        "schema_version": {
+          "const": "p0.v1",
+          "default": "p0.v1",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "verifier_pass_rate": {
+          "anyOf": [
+            {
+              "maximum": 1.0,
+              "minimum": 0.0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Verifier Pass Rate"
+        }
+      },
+      "title": "CapacityQualityMemory",
+      "type": "object"
+    },
+    "ModelProfile": {
+      "additionalProperties": false,
+      "properties": {
+        "context_window_class": {
+          "default": "unknown",
+          "enum": [
+            "small",
+            "medium",
+            "large",
+            "very_large",
+            "unknown"
+          ],
+          "title": "Context Window Class",
+          "type": "string"
+        },
+        "model_id": {
+          "minLength": 1,
+          "title": "Model Id",
+          "type": "string"
+        },
+        "model_tier": {
+          "default": "standard",
+          "enum": [
+            "weak_general",
+            "standard",
+            "strong",
+            "frontier",
+            "specialist"
+          ],
+          "title": "Model Tier",
+          "type": "string"
+        },
+        "provider_id": {
+          "minLength": 1,
+          "title": "Provider Id",
+          "type": "string"
+        },
+        "schema_version": {
+          "const": "p0.v1",
+          "default": "p0.v1",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "supports_structured_output": {
+          "default": false,
+          "title": "Supports Structured Output",
+          "type": "boolean"
+        },
+        "supports_tool_calling": {
+          "default": false,
+          "title": "Supports Tool Calling",
+          "type": "boolean"
+        },
+        "wire_quirks_profile_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Wire Quirks Profile Id"
+        }
+      },
+      "required": [
+        "provider_id",
+        "model_id"
+      ],
+      "title": "ModelProfile",
+      "type": "object"
+    },
+    "VerifiedForTask": {
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {
+          "const": "p0.v1",
+          "default": "p0.v1",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "status": {
+          "default": "declared",
+          "enum": [
+            "declared",
+            "tested",
+            "verified",
+            "failed"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "task_type": {
+          "minLength": 1,
+          "title": "Task Type",
+          "type": "string"
+        },
+        "verifier_recipe_id": {
+          "minLength": 1,
+          "title": "Verifier Recipe Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "task_type",
+        "verifier_recipe_id"
+      ],
+      "title": "VerifiedForTask",
+      "type": "object"
+    }
+  },
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "Routebook V1 capability map for executable private capacity.",
+  "properties": {
+    "availability_state": {
+      "default": "unknown",
+      "enum": [
+        "available",
+        "degraded",
+        "unavailable",
+        "unknown"
+      ],
+      "title": "Availability State",
+      "type": "string"
+    },
+    "backend_class": {
+      "enum": [
+        "local_tool",
+        "local_script",
+        "browser_fetch",
+        "local_model",
+        "api_model_gateway",
+        "primary_model_gateway"
+      ],
+      "title": "Backend Class",
+      "type": "string"
+    },
+    "backend_id": {
+      "minLength": 1,
+      "title": "Backend Id",
+      "type": "string"
+    },
+    "capabilities": {
+      "additionalProperties": {
+        "$ref": "#/$defs/CapacityCapability"
+      },
+      "propertyNames": {
+        "minLength": 1
+      },
+      "title": "Capabilities",
+      "type": "object"
+    },
+    "capacity_node_id": {
+      "minLength": 1,
+      "title": "Capacity Node Id",
+      "type": "string"
+    },
+    "capacity_profile_id": {
+      "minLength": 1,
+      "title": "Capacity Profile Id",
+      "type": "string"
+    },
+    "cost": {
+      "$ref": "#/$defs/CapacityCostProfile"
+    },
+    "execution_boundary": {
+      "minLength": 1,
+      "title": "Execution Boundary",
+      "type": "string"
+    },
+    "latency": {
+      "$ref": "#/$defs/CapacityLatencyProfile"
+    },
+    "model_profile": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/ModelProfile"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "ownership_scope": {
+      "default": "user_local",
+      "enum": [
+        "user_local",
+        "team_local",
+        "system",
+        "peer"
+      ],
+      "title": "Ownership Scope",
+      "type": "string"
+    },
+    "quality_memory": {
+      "$ref": "#/$defs/CapacityQualityMemory"
+    },
+    "schema_version": {
+      "const": "p0.v1",
+      "default": "p0.v1",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "verified_for": {
+      "items": {
+        "$ref": "#/$defs/VerifiedForTask"
+      },
+      "title": "Verified For",
+      "type": "array"
+    }
+  },
+  "required": [
+    "capacity_profile_id",
+    "capacity_node_id",
+    "backend_id",
+    "backend_class",
+    "execution_boundary"
+  ],
+  "title": "CapacityProfile",
+  "type": "object"
+}

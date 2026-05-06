@@ -1,0 +1,6 @@
+fallback_rules:
+  - fallback_rule_id: claim_api_to_primary
+    task_type: claim_extraction
+    from_backend_id: backend:claim_extraction:api_gateway:v0
+    to_backend_id: backend:claim_extraction:primary_gateway:v0
+    reason: primary gateway fallback for claim extraction route planning

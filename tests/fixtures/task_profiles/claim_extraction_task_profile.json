@@ -1,0 +1,41 @@
+{
+  "schema_version": "p0.v1",
+  "task_profile_id": "tp_fixture_claim_extraction",
+  "work_unit_id": "wu_fixture_claim_extraction",
+  "routebook_id": "tokenbank.base",
+  "routebook_version": "1.0.0",
+  "source": "deterministic",
+  "task_family": "strong_reasoning",
+  "task_type": "claim_extraction",
+  "difficulty": "high",
+  "risk_level": "L2",
+  "privacy_level": "private",
+  "context_size": "small",
+  "latency_preference": "normal",
+  "cost_preference": "balanced",
+  "required_capabilities": [
+    {
+      "schema_version": "p0.v1",
+      "capability": "strong_reasoning",
+      "min_score": 0.75,
+      "importance": "required"
+    },
+    {
+      "schema_version": "p0.v1",
+      "capability": "structured_output",
+      "min_score": 0.75,
+      "importance": "required"
+    }
+  ],
+  "forbidden_capabilities": [],
+  "requires_tools": [],
+  "requires_verifier_recipe_id": true,
+  "success_criteria": ["factual_claims", "source_refs", "result_hash"],
+  "ambiguity": {
+    "schema_version": "p0.v1",
+    "status": "low",
+    "unresolved_questions": []
+  },
+  "confidence": 0.82,
+  "profile_reason_codes": ["fixture_profile"]
+}

@@ -1,0 +1,308 @@
+{
+  "$defs": {
+    "CapacityNodeHealth": {
+      "additionalProperties": false,
+      "properties": {
+        "active_assignments": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Active Assignments",
+          "type": "integer"
+        },
+        "capacity_node_id": {
+          "minLength": 1,
+          "title": "Capacity Node Id",
+          "type": "string"
+        },
+        "checked_at": {
+          "format": "date-time",
+          "title": "Checked At",
+          "type": "string"
+        },
+        "latency_ms": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Latency Ms"
+        },
+        "message": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Message"
+        },
+        "schema_version": {
+          "const": "p0.v1",
+          "default": "p0.v1",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "status": {
+          "default": "unknown",
+          "enum": [
+            "healthy",
+            "degraded",
+            "unhealthy",
+            "unknown"
+          ],
+          "title": "Status",
+          "type": "string"
+        }
+      },
+      "required": [
+        "capacity_node_id"
+      ],
+      "title": "CapacityNodeHealth",
+      "type": "object"
+    },
+    "CostModel": {
+      "additionalProperties": false,
+      "properties": {
+        "cost_source": {
+          "default": "policy_default",
+          "enum": [
+            "measured",
+            "estimated",
+            "policy_default",
+            "zero_internal_phase0",
+            "not_applicable"
+          ],
+          "title": "Cost Source",
+          "type": "string"
+        },
+        "estimated_cost_micros": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Estimated Cost Micros",
+          "type": "integer"
+        },
+        "schema_version": {
+          "const": "p0.v1",
+          "default": "p0.v1",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "unit": {
+          "default": "work_unit",
+          "minLength": 1,
+          "title": "Unit",
+          "type": "string"
+        }
+      },
+      "title": "CostModel",
+      "type": "object"
+    }
+  },
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "allowed_data_labels": {
+      "items": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "title": "Allowed Data Labels",
+      "type": "array"
+    },
+    "allowed_privacy_levels": {
+      "items": {
+        "enum": [
+          "private",
+          "internal",
+          "sensitive"
+        ],
+        "type": "string"
+      },
+      "title": "Allowed Privacy Levels",
+      "type": "array"
+    },
+    "allowed_task_types": {
+      "items": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "title": "Allowed Task Types",
+      "type": "array"
+    },
+    "backend_classes": {
+      "items": {
+        "enum": [
+          "local_tool",
+          "local_script",
+          "browser_fetch",
+          "local_model",
+          "api_model_gateway",
+          "primary_model_gateway"
+        ],
+        "type": "string"
+      },
+      "title": "Backend Classes",
+      "type": "array"
+    },
+    "backend_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Backend Id"
+    },
+    "backend_ids": {
+      "items": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "title": "Backend Ids",
+      "type": "array"
+    },
+    "capabilities": {
+      "items": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "title": "Capabilities",
+      "type": "array"
+    },
+    "capacity_node_id": {
+      "minLength": 1,
+      "title": "Capacity Node Id",
+      "type": "string"
+    },
+    "cost_model": {
+      "$ref": "#/$defs/CostModel"
+    },
+    "created_at": {
+      "format": "date-time",
+      "title": "Created At",
+      "type": "string"
+    },
+    "execution_location": {
+      "enum": [
+        "mac_control_plane",
+        "windows_worker",
+        "local_machine"
+      ],
+      "title": "Execution Location",
+      "type": "string"
+    },
+    "health": {
+      "$ref": "#/$defs/CapacityNodeHealth"
+    },
+    "identity": {
+      "minLength": 1,
+      "title": "Identity",
+      "type": "string"
+    },
+    "manifest_hash": {
+      "minLength": 1,
+      "title": "Manifest Hash",
+      "type": "string"
+    },
+    "model_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Model Id"
+    },
+    "node_type": {
+      "enum": [
+        "windows_worker",
+        "control_plane_gateway",
+        "local_tool",
+        "local_script",
+        "browser_fetch",
+        "local_model",
+        "api_model_gateway",
+        "primary_model_gateway",
+        "future_agent"
+      ],
+      "title": "Node Type",
+      "type": "string"
+    },
+    "policy_constraints": {
+      "additionalProperties": true,
+      "title": "Policy Constraints",
+      "type": "object"
+    },
+    "provider_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Provider Id"
+    },
+    "schema_version": {
+      "const": "p0.v1",
+      "default": "p0.v1",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "trust_level": {
+      "enum": [
+        "trusted_private",
+        "control_plane",
+        "sandboxed"
+      ],
+      "title": "Trust Level",
+      "type": "string"
+    },
+    "updated_at": {
+      "format": "date-time",
+      "title": "Updated At",
+      "type": "string"
+    },
+    "worker_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Worker Id"
+    }
+  },
+  "required": [
+    "capacity_node_id",
+    "node_type",
+    "identity",
+    "capabilities",
+    "trust_level",
+    "allowed_task_types",
+    "execution_location",
+    "health",
+    "manifest_hash"
+  ],
+  "title": "CapacityNode",
+  "type": "object"
+}
