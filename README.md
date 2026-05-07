@@ -36,8 +36,10 @@ candidate scoring, `route score`, MCP route scoring, and scored RoutePlan
 selection without scheduling or model calls. WP-LEDGER1 adds local account
 snapshots, usage ledger entries, and redacted audit receipts so completed
 private-capacity work can be audited without storing raw credentials, prompts,
-or outputs. It does not implement dashboard UI, full model gateway runtime,
-real external model calls, multi-provider gateway, or peer negotiation.
+or outputs. WP-DASH1 adds a local read-only usage/account/audit dashboard,
+authenticated dashboard JSON endpoints, and redacted dashboard export. It does
+not implement a cloud dashboard, full model gateway runtime, real external
+model calls, multi-provider gateway, or peer negotiation.
 
 ## Current Scope
 
@@ -117,6 +119,9 @@ The current foundation provides:
 - WP-LEDGER1 AccountSnapshot, UsageLedgerEntry, and AuditReceipt DTOs and
   schemas, SQLite tables, local account snapshot CLI, usage ledger CLI, audit
   receipt CLI, and hash-backed redacted evidence chains for accepted results.
+- WP-DASH1 local read-only dashboard data service, localhost HTML dashboard,
+  host-authenticated dashboard JSON endpoints, CLI summary/export/serve
+  commands, capacity/account/usage/route/receipt sections, and redacted export.
 - Smoke tests for importability, CLI help, terminology, schema parity,
   validation, canonical hashing, database bootstrap, event outbox, capacity
   registry, policy, config validation, API auth/startup, scheduler assignment
@@ -129,7 +134,7 @@ The current foundation provides:
   `claim_extraction` end-to-end paths, WP11 report generation/redaction, WP12
   MCP tools, WP13 private capacity demo, WP-RB1 route explanation, WP-RB2
   task analysis, WP-RB3 route scoring, and WP-LEDGER1 account/usage/audit
-  surfaces.
+  surfaces, and WP-DASH1 dashboard redaction/API/CLI surfaces.
 
 ## Quickstart
 
@@ -154,6 +159,9 @@ uv run tokenbank accounts list --json
 uv run tokenbank usage record --work-unit-id <work_unit_id> --json
 uv run tokenbank usage ledger --work-unit-id <work_unit_id> --json
 uv run tokenbank audit receipt --work-unit-id <work_unit_id> --json
+uv run tokenbank dashboard summary --json
+uv run tokenbank dashboard export --output .tokenbank/dashboard_export.json --json
+uv run tokenbank dashboard serve --host 127.0.0.1 --port 8766
 uv run tokenbank capacity list
 uv run tokenbank mcp serve
 uv run pytest
@@ -196,12 +204,13 @@ WP-RB1 Routebook V1 Profiles And Explanation
 WP-RB2 TaskAnalyzer And TokenEstimate
 WP-RB3 RouteScorer
 WP-LEDGER1 Account Ledger And Audit Receipts
+WP-DASH1 Local Usage Account Audit Dashboard
 then WP-RB4 or later only with an explicit work package
 ```
 
 Do not proceed to all five task types until VS0 passes.
-After WP-LEDGER1, do not broaden into dashboard UI, x-radar, real external
-model calls, peer negotiation, or multi-provider gateway without an explicit
+After WP-DASH1, do not broaden into x-radar, real external model calls, peer
+negotiation, cloud dashboard, or multi-provider gateway without an explicit
 work package.
 
 ## Contributing And Security

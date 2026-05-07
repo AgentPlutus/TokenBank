@@ -52,13 +52,15 @@ The current implementation includes:
 - WP-LEDGER1 local account snapshots, usage ledger entries, and redacted audit
   receipts for accepted results, with credential refs and hashes instead of raw
   secrets or raw outputs.
+- WP-DASH1 local read-only dashboard for accounts, balances, usage, route
+  audit, audit receipts, capacity health, and redacted export.
 
 ## Non-Goals
 
 TokenBank Phase 0/1 does not implement seller mode, marketplace, payment,
 payout, settlement, account-sharing, OAuth sharing, cookie sharing, API-key
 sharing, real external model calls, multi-provider gateway runtime, scored
-route execution beyond Phase 0 boundaries, peer negotiation, full dashboard UI,
+route execution beyond Phase 0 boundaries, peer negotiation, cloud dashboard,
 or OpenAI-compatible proxy
 endpoints.
 

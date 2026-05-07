@@ -13,6 +13,8 @@ from tokenbank.app.bootstrap import rebuild_capacity_projection_from_config_and_
 from tokenbank.capacity.discovery import discover_capacity_nodes
 from tokenbank.config_runtime.loader import load_config_dir
 from tokenbank.config_runtime.validator import validate_config_dir
+from tokenbank.dashboard.app import create_dashboard_app
+from tokenbank.dashboard.views import dashboard_export, dashboard_snapshot
 from tokenbank.db.bootstrap import initialize_database
 from tokenbank.demo.private_capacity import PrivateCapacityDemoRunner
 from tokenbank.host_adapter import HostAdapterCore, MCPStdioServer
@@ -33,7 +35,8 @@ app = typer.Typer(
         "VS1c topic_classification, and VS1d claim_extraction are "
         "end-to-end; WP11 observability, WP12 MCP, WP-RB1 route "
         "explanation, WP-RB2 task analysis, WP-RB3 route scoring, "
-        "and WP-LEDGER1 local ledger/audit receipts are implemented."
+        "WP-LEDGER1 local ledger/audit receipts, and WP-DASH1 local "
+        "dashboard are implemented."
     ),
     no_args_is_help=True,
 )
@@ -85,6 +88,10 @@ audit_app = typer.Typer(
     add_completion=False,
     help="Hash-backed audit receipt commands.",
 )
+dashboard_app = typer.Typer(
+    add_completion=False,
+    help="Local read-only usage/account/audit dashboard commands.",
+)
 mcp_app = typer.Typer(
     add_completion=False,
     help="P0 MCP stdio stub commands.",
@@ -116,6 +123,17 @@ DB_PATH_OPTION = typer.Option(
 )
 HOST_OPTION = typer.Option("127.0.0.1", "--host", help="Daemon bind host.")
 PORT_OPTION = typer.Option(8765, "--port", help="Daemon bind port.")
+DASHBOARD_PORT_OPTION = typer.Option(
+    8766,
+    "--port",
+    help="Dashboard bind port.",
+)
+DASHBOARD_EXPORT_OUTPUT_OPTION = typer.Option(
+    None,
+    "--output",
+    "-o",
+    help="Optional path for redacted dashboard export JSON.",
+)
 SMOKE_TEST_OPTION = typer.Option(
     False,
     "--smoke-test",
@@ -177,7 +195,8 @@ def about() -> None:
         "deterministic task analysis and token/cost/privacy estimates. "
         "WP-RB3 applies deterministic route scoring. WP-LEDGER1 records "
         "local account snapshots, usage ledger entries, and redacted audit "
-        "receipts."
+        "receipts. WP-DASH1 exposes a local read-only dashboard and redacted "
+        "dashboard export."
     )
 
 
@@ -866,6 +885,83 @@ def audit_list(
     _emit_payload(result, json_output=json_output)
 
 
+@dashboard_app.command("summary")
+def dashboard_summary(
+    limit: int = typer.Option(
+        50,
+        "--limit",
+        min=1,
+        max=500,
+        help="Maximum rows per dashboard section.",
+    ),
+    json_output: bool = typer.Option(
+        False,
+        "--json",
+        help="Emit machine-readable JSON.",
+    ),
+    config_dir: Path = CONFIG_DIR_OPTION,
+    db_path: Path = DB_PATH_OPTION,
+) -> None:
+    """Print a redacted local dashboard snapshot."""
+    payload = _dashboard_payload(
+        config_dir=config_dir,
+        db_path=db_path,
+        builder=lambda conn: dashboard_snapshot(conn, limit=limit),
+    )
+    _emit_payload(payload, json_output=json_output)
+
+
+@dashboard_app.command("export")
+def dashboard_redacted_export(
+    output: Path | None = DASHBOARD_EXPORT_OUTPUT_OPTION,
+    limit: int = typer.Option(
+        50,
+        "--limit",
+        min=1,
+        max=500,
+        help="Maximum rows per dashboard section.",
+    ),
+    json_output: bool = typer.Option(
+        False,
+        "--json",
+        help="Emit machine-readable JSON.",
+    ),
+    config_dir: Path = CONFIG_DIR_OPTION,
+    db_path: Path = DB_PATH_OPTION,
+) -> None:
+    """Create a user-controlled redacted dashboard export."""
+    payload = _dashboard_payload(
+        config_dir=config_dir,
+        db_path=db_path,
+        builder=lambda conn: dashboard_export(conn, limit=limit),
+    )
+    if output is not None:
+        output.parent.mkdir(parents=True, exist_ok=True)
+        output.write_text(
+            json.dumps(payload, indent=2, sort_keys=True),
+            encoding="utf-8",
+        )
+    _emit_payload(payload, json_output=json_output)
+
+
+@dashboard_app.command("serve")
+def dashboard_serve(
+    config_dir: Path = CONFIG_DIR_OPTION,
+    db_path: Path = DB_PATH_OPTION,
+    host: str = typer.Option(
+        "127.0.0.1",
+        "--host",
+        help="Dashboard bind host. Keep 127.0.0.1 for local-only use.",
+    ),
+    port: int = DASHBOARD_PORT_OPTION,
+) -> None:
+    """Serve the local read-only dashboard."""
+    import uvicorn
+
+    dashboard_instance = create_dashboard_app(config_dir=config_dir, db_path=db_path)
+    uvicorn.run(dashboard_instance, host=host, port=port)
+
+
 @demo_capacity_app.command("run")
 def demo_capacity_run(
     task: str | None = typer.Option(
@@ -922,6 +1018,7 @@ app.add_typer(report_app, name="report")
 app.add_typer(accounts_app, name="accounts")
 app.add_typer(usage_app, name="usage")
 app.add_typer(audit_app, name="audit")
+app.add_typer(dashboard_app, name="dashboard")
 app.add_typer(mcp_app, name="mcp")
 app.add_typer(demo_app, name="demo")
 
@@ -978,6 +1075,21 @@ def _emit_report(report: dict, *, json_output: bool) -> None:
 
 def _host_adapter(config_dir: Path, db_path: Path) -> HostAdapterCore:
     return HostAdapterCore(config_dir=config_dir, db_path=db_path)
+
+
+def _dashboard_payload(
+    *,
+    config_dir: Path,
+    db_path: Path,
+    builder,
+) -> dict:
+    loaded_config = load_config_dir(config_dir)
+    conn = initialize_database(db_path)
+    try:
+        rebuild_capacity_projection_from_config_and_db(conn, loaded_config)
+        return builder(conn)
+    finally:
+        conn.close()
 
 
 def _emit_payload(payload: dict, *, json_output: bool) -> None:

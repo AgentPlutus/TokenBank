@@ -11,6 +11,7 @@ PUBLIC_DOCS = [
     REPO_ROOT / "docs" / "XRADAR_BATCH_ADAPTER.md",
     REPO_ROOT / "docs" / "SECURITY_MODEL.md",
     REPO_ROOT / "docs" / "LEDGER_AND_AUDIT.md",
+    REPO_ROOT / "docs" / "DASHBOARD_LOCAL_AUDIT.md",
     REPO_ROOT / "docs" / "MCP_SERVER.md",
     REPO_ROOT / "docs" / "PUBLIC_ALPHA_PACKAGE.md",
     REPO_ROOT / "docs" / "TESTING.md",

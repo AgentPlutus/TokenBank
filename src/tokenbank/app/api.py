@@ -11,6 +11,7 @@ from tokenbank.app.lifespan import lifespan
 from tokenbank.app.routers import (
     assignments,
     capacity,
+    dashboard,
     host,
     internal_policy,
     internal_router,
@@ -46,6 +47,7 @@ def create_app(
 
     app.include_router(host.router)
     app.include_router(capacity.router)
+    app.include_router(dashboard.router)
     app.include_router(workers.router)
     app.include_router(assignments.router)
     app.include_router(internal_router.router)

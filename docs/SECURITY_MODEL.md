@@ -45,6 +45,14 @@ WorkUnit, RoutePlan, Assignment, ResultEnvelope, VerifierReport, and optional
 UsageLedgerEntry evidence without embedding raw prompts, raw outputs, bearer
 tokens, cookies, or provider credentials.
 
+## Local Dashboard Boundary
+
+WP-DASH1 dashboard views are local-first and read-only. The standalone
+dashboard server binds to `127.0.0.1` by default. Control-plane dashboard JSON
+endpoints require a host token. Dashboard responses remove raw secret refs,
+render only secret-ref kind/status, and export ids, hashes, usage counts,
+cost micros, and local balance hints without raw prompts or raw outputs.
+
 ## HostAdapter And MCP
 
 HostAdapter accepts explicit references only. It must not scan workspace
